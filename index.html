@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Race Coast Premier Yearling Sale</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#f4f4f4;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,250px);
+    gap:20px;
+}
+
+.card{
+    background:white;
+    border-radius:8px;
+    padding:10px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    text-align:center;
+}
+
+.card img{
+    width:100%;
+    border-radius:5px;
+}
+
+button{
+    margin:5px;
+    padding:6px 10px;
+    border:none;
+    background:#1d3557;
+    color:white;
+    border-radius:4px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#457b9d;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>2026 Premier Yearling Sale</h1>
+
+<div class="container" id="lots"></div>
+
+<script>
+
+const TOTAL_LOTS = 200   // change to full catalogue size
+
+const container = document.getElementById("lots")
+
+for(let lot=1; lot<=TOTAL_LOTS; lot++){
+
+    let img =
+`https://racecoastsales.co.za/wp-content/uploads/2026-PYS/2026-PYS-${lot}.jpg`
+
+    let pedigree =
+`https://racecoastsales.co.za/wp-content/uploads/2026-PYS/2026-PYS-${lot}.jpg`
+
+    let card = document.createElement("div")
+    card.className = "card"
+
+    card.innerHTML = `
+        <h3>Lot ${lot}</h3>
+
+        <img src="${img}" onerror="this.style.display='none'">
+
+        <br>
+
+        <button onclick="window.open('${img}','_blank')">
+        Pedigree
+        </button>
+
+        <button onclick="searchSire(${lot})">
+        Sire
+        </button>
+
+        <button onclick="searchDam(${lot})">
+        Dam
+        </button>
+    `
+
+    container.appendChild(card)
+}
+
+function searchSire(lot){
+    alert("Connect sire database for Lot " + lot)
+}
+
+function searchDam(lot){
+    alert("Connect dam database for Lot " + lot)
+}
+
+</script>
+
+</body>
+</html>
