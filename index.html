@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -6,13 +6,18 @@
   <title>Race Coast Sales Window</title>
   <style>
     :root {
-      --bg: #f5f7fb;
+      --bg: #f3f5f9;
       --card: #ffffff;
       --text: #1f2937;
       --muted: #6b7280;
-      --line: #e5e7eb;
+      --line: #dbe1ea;
       --accent: #0f3d75;
       --accent-2: #1d4f91;
+      --yes: #dff7e7;
+      --no: #fde7e7;
+      --maybe: #eef2ff;
+      --chip: #eff3f8;
+      --gold: #8b6f00;
     }
     * { box-sizing: border-box; }
     body {
@@ -24,71 +29,81 @@
     header {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: white;
-      padding: 20px 16px;
+      padding: 18px 14px;
       position: sticky;
       top: 0;
-      z-index: 10;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      z-index: 30;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    h1 {
-      margin: 0 0 8px 0;
-      font-size: 24px;
-    }
-    .sub {
-      opacity: 0.92;
-      font-size: 14px;
-    }
+    h1 { margin: 0 0 6px 0; font-size: 24px; }
+    .sub { font-size: 14px; opacity: .95; }
     .controls {
       display: grid;
-      grid-template-columns: 1.4fr 1fr 120px;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr auto;
       gap: 10px;
       margin-top: 14px;
     }
-    input, select, button {
+    input, select, button, textarea {
       width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid var(--line);
       font-size: 14px;
+      background: white;
     }
     button {
-      background: white;
-      color: var(--accent);
-      font-weight: 700;
       cursor: pointer;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .toolbar button {
+      width: auto;
+      background: white;
     }
     main {
-      padding: 16px;
-      max-width: 1400px;
+      max-width: 1500px;
       margin: 0 auto;
+      padding: 16px;
     }
     .summary {
       color: var(--muted);
       margin-bottom: 14px;
       font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
       gap: 16px;
     }
     .card {
       background: var(--card);
+      border: 1px solid var(--line);
       border-radius: 16px;
       overflow: hidden;
       box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-      border: 1px solid var(--line);
       display: flex;
       flex-direction: column;
-      min-height: 100%;
     }
+    .card.choice-yes { outline: 3px solid #b8e5c8; }
+    .card.choice-no { outline: 3px solid #f5c0c0; }
+    .card.choice-undecided { outline: 3px solid #d7def7; }
     .img-wrap {
       background: #eef2f7;
       aspect-ratio: 4 / 3;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
     .img-wrap img {
       width: 100%;
@@ -99,8 +114,8 @@
     .img-fallback {
       color: var(--muted);
       font-size: 13px;
-      padding: 16px;
       text-align: center;
+      padding: 16px;
     }
     .content {
       padding: 14px;
@@ -108,33 +123,73 @@
       flex-direction: column;
       gap: 8px;
     }
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+    }
     .lot {
       color: var(--accent);
       font-size: 13px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
+      letter-spacing: .5px;
     }
     .name {
-      font-size: 18px;
+      font-size: 19px;
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.2;
+      margin-top: 2px;
     }
-    .meta {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-    .label {
+    .sex {
+      background: var(--chip);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
       color: var(--muted);
+      white-space: nowrap;
+    }
+    .meta { font-size: 14px; line-height: 1.45; }
+    .label { color: var(--muted); font-weight: 700; }
+    .score-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .score-box {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+    }
+    .score-box .k { color: var(--muted); font-size: 12px; }
+    .score-box .v { font-size: 20px; font-weight: 700; color: var(--gold); }
+    .choice-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .choice-pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
       font-weight: 700;
     }
+    .choice-pill.yes { background: var(--yes); color: #146534; }
+    .choice-pill.no { background: var(--no); color: #a91c1c; }
+    .choice-pill.undecided { background: var(--maybe); color: #3847a8; }
     .actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-top: 8px;
     }
-    .actions a {
+    .actions a, .actions button {
       text-decoration: none;
       text-align: center;
       background: var(--accent);
@@ -143,76 +198,245 @@
       border-radius: 10px;
       font-size: 14px;
       font-weight: 700;
+      border: none;
     }
-    .actions a.secondary {
+    .actions .secondary {
       background: #eef2ff;
       color: var(--accent);
       border: 1px solid #dbe4ff;
     }
+    .actions .ghost {
+      background: #f8fafc;
+      color: var(--accent);
+      border: 1px solid var(--line);
+    }
+    dialog {
+      width: min(760px, calc(100vw - 24px));
+      border: none;
+      border-radius: 18px;
+      padding: 0;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    dialog::backdrop { background: rgba(15, 23, 42, 0.55); }
+    .modal-head {
+      padding: 16px 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+    }
+    .modal-body {
+      padding: 16px 18px 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .modal-body .full { grid-column: 1 / -1; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .radio-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-top: 8px;
+    }
+    .radio-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 400;
+      color: var(--text);
+      margin: 0;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 18px 18px;
+      flex-wrap: wrap;
+    }
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    @media (max-width: 980px) {
+      .controls { grid-template-columns: 1fr 1fr 1fr; }
+    }
     @media (max-width: 760px) {
-      .controls {
-        grid-template-columns: 1fr;
-      }
-      h1 {
-        font-size: 20px;
-      }
+      h1 { font-size: 20px; }
+      .controls { grid-template-columns: 1fr; }
+      .modal-body { grid-template-columns: 1fr; }
+      .actions { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>2026 Premier Yearling Sale</h1>
-    <div class="sub">Auto-generated window for Race Coast images, pedigree links, and sire / dam details.</div>
+    <div class="sub">Search by lot, horse, sire, or dam. Save your yes/no decision, score physical and pedigree from 1 to 5, add notes and a second link, then filter only your picks and rank them by score.</div>
     <div class="controls">
-      <input id="search" type="text" placeholder="Search by lot, horse, sire, or dam" />
-      <select id="sireFilter">
-        <option value="">All sires</option>
+      <input id="search" type="text" placeholder="Search lot, horse, sire, or dam" />
+      <select id="choiceFilter">
+        <option value="">All decisions</option>
+        <option value="yes">Yes only</option>
+        <option value="no">No only</option>
+        <option value="undecided">Undecided only</option>
       </select>
-      <button id="clearBtn" type="button">Clear</button>
+      <select id="vendorFilter">
+        <option value="">All vendors</option>
+      </select>
+      <select id="pickedFilter">
+        <option value="">All lots</option>
+        <option value="picked">Only scored / updated lots</option>
+      </select>
+      <select id="sortBy">
+        <option value="lot">Sort by lot</option>
+        <option value="physical">Sort by physical score</option>
+        <option value="pedigree">Sort by pedigree score</option>
+        <option value="total">Sort by total score</option>
+      </select>
+      <select id="sortDir">
+        <option value="desc">Highest first</option>
+        <option value="asc">Lowest first</option>
+      </select>
+      <button id="clearFiltersBtn" type="button">Clear</button>
+    </div>
+    <div class="toolbar">
+      <button id="shortlistViewBtn" type="button">Shortlist view</button>
+      <button id="showMyChoicesBtn" type="button">Show my choices</button>
+      <button id="exportBtn" type="button">Export my updates</button>
+      <button id="importBtn" type="button">Import my updates</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
     </div>
   </header>
 
   <main>
     <div id="summary" class="summary"></div>
+    <div id="shortlistBanner" style="display:none;margin-bottom:14px;padding:12px 14px;background:#eef2ff;border:1px solid #dbe4ff;border-radius:12px;color:#1f3f8f;font-weight:700;">Shortlist view is on: showing only YES horses, sorted by total score highest first.</div>
     <div id="grid" class="grid"></div>
   </main>
 
+  <dialog id="editDialog">
+    <div class="modal-head">
+      <div id="modalTitle" style="font-size:20px;font-weight:700;"></div>
+      <div id="modalSub" style="font-size:13px;opacity:.95;margin-top:4px;"></div>
+    </div>
+    <form method="dialog" id="editForm">
+      <div class="modal-body">
+        <div class="field full">
+          <label>Decision</label>
+          <div class="radio-row">
+            <label><input type="radio" name="choice" value="yes"> Yes</label>
+            <label><input type="radio" name="choice" value="no"> No</label>
+            <label><input type="radio" name="choice" value="undecided"> Undecided</label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="physicalScore">Physical score (1 to 5)</label>
+          <select id="physicalScore">
+            <option value="">None</option>
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="4">4</option><option value="5">5</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="pedigreeScore">Pedigree score (1 to 5)</label>
+          <select id="pedigreeScore">
+            <option value="">None</option>
+            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+            <option value="4">4</option><option value="5">5</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label for="secondLink">Second link</label>
+          <input id="secondLink" type="url" placeholder="https://..." />
+        </div>
+
+        <div class="field full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" rows="4" placeholder="Your notes..."></textarea>
+        </div>
+
+        <div class="field full note">
+          Updates are saved in your browser automatically. Use Export to back up your scores and notes, or Import to restore them on another device.
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="deleteEntryBtn" type="button">Clear this entry</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button type="button" id="cancelBtn">Cancel</button>
+          <button type="submit" id="saveBtn">Save</button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
   <script>
     const BASE = 'https://racecoastsales.co.za/wp-content/uploads/2026-PYS';
+    const STORAGE_KEY = 'racecoast-sales-window-v2';
+    const lots = [];
 
-    const lots = [
-      { lot: 1, name: 'Lot 1', sire: 'Unknown Sire', dam: 'Unknown Dam', stable: '', foaled: '' },
-      { lot: 19, name: 'Lot 19', sire: 'Unknown Sire', dam: 'Unknown Dam', stable: '', foaled: '' }
-    ];
-
-    const fallbackLots = Array.from({ length: 270 }, (_, i) => ({
-      lot: i + 1,
-      name: `Lot ${i + 1}`,
-      sire: 'Unknown Sire',
-      dam: 'Unknown Dam',
-      stable: '',
-      foaled: ''
-    }));
-
-    const data = lots.length > 2 ? lots : fallbackLots;
+    let edits = loadEdits();
+    let currentLot = null;
 
     const grid = document.getElementById('grid');
-    const search = document.getElementById('search');
-    const sireFilter = document.getElementById('sireFilter');
-    const clearBtn = document.getElementById('clearBtn');
     const summary = document.getElementById('summary');
+    const search = document.getElementById('search');
+    const choiceFilter = document.getElementById('choiceFilter');
+    const vendorFilter = document.getElementById('vendorFilter');
+    const pickedFilter = document.getElementById('pickedFilter');
+    const sortBy = document.getElementById('sortBy');
+    const sortDir = document.getElementById('sortDir');
+    const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+    const showMyChoicesBtn = document.getElementById('showMyChoicesBtn');
+    const shortlistBanner = document.getElementById('shortlistBanner');
+    const exportBtn = document.getElementById('exportBtn');
+    const shortlistViewBtn = document.getElementById('shortlistViewBtn');
+    const importBtn = document.getElementById('importBtn');
+    const importFile = document.getElementById('importFile');
 
-    function uniqueSires(records) {
-      return [...new Set(records.map(x => x.sire).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    const dialog = document.getElementById('editDialog');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSub = document.getElementById('modalSub');
+    const editForm = document.getElementById('editForm');
+    const physicalScore = document.getElementById('physicalScore');
+    const pedigreeScore = document.getElementById('pedigreeScore');
+    const secondLink = document.getElementById('secondLink');
+    const notes = document.getElementById('notes');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const deleteEntryBtn = document.getElementById('deleteEntryBtn');
+
+    function loadEdits() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch (e) {
+        return {};
+      }
     }
 
-    function populateSireFilter() {
-      uniqueSires(data).forEach(sire => {
-        const option = document.createElement('option');
-        option.value = sire;
-        option.textContent = sire;
-        sireFilter.appendChild(option);
-      });
+    function saveEdits() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
+    }
+
+    function getEdit(lot) {
+      return edits[String(lot)] || {};
+    }
+
+    function totalScore(entry) {
+      const p = Number(entry.physicalScore || 0);
+      const g = Number(entry.pedigreeScore || 0);
+      return p + g;
+    }
+
+    function isPicked(entry) {
+      return Boolean(entry.choice || entry.physicalScore || entry.pedigreeScore || entry.notes || entry.secondLink);
     }
 
     function lotImage(lot) {
@@ -223,62 +447,291 @@
       return `${BASE}/2026-PYS-${lot}.pdf`;
     }
 
-    function matches(record, q, sire) {
-      const hay = `${record.lot} ${record.name} ${record.sire} ${record.dam}`.toLowerCase();
-      const okText = !q || hay.includes(q);
-      const okSire = !sire || record.sire === sire;
-      return okText && okSire;
+    function mergedRecord(base) {
+      const entry = getEdit(base.lot);
+      return {
+        ...base,
+        choice: entry.choice || '',
+        physicalScore: entry.physicalScore || '',
+        pedigreeScore: entry.pedigreeScore || '',
+        secondLink: entry.secondLink || '',
+        notes: entry.notes || '',
+        total: totalScore(entry)
+      };
     }
 
-    function render(records) {
+    function choiceClass(choice) {
+      return choice || 'undecided';
+    }
+
+    function choiceLabel(choice) {
+      return choice ? choice.toUpperCase() : 'UNDECIDED';
+    }
+
+    function choiceTextClass(choice) {
+      return choice || 'undecided';
+    }
+
+    function compareValues(a, b, key, dir) {
+      let av, bv;
+      if (key === 'physical') {
+        av = Number(a.physicalScore || 0);
+        bv = Number(b.physicalScore || 0);
+      } else if (key === 'pedigree') {
+        av = Number(a.pedigreeScore || 0);
+        bv = Number(b.pedigreeScore || 0);
+      } else if (key === 'total') {
+        av = Number(a.total || 0);
+        bv = Number(b.total || 0);
+      } else {
+        av = Number(a.lot);
+        bv = Number(b.lot);
+      }
+      const res = av === bv ? Number(a.lot) - Number(b.lot) : av - bv;
+      return dir === 'asc' ? res : -res;
+    }
+
+    function populateVendorFilter() {
+      const vendors = [...new Set(lots.map(x => (x.vendor || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+      vendorFilter.innerHTML = '<option value="">All vendors</option>';
+      vendors.forEach(vendor => {
+        const option = document.createElement('option');
+        option.value = vendor;
+        option.textContent = vendor;
+        vendorFilter.appendChild(option);
+      });
+    }
+
+    function filteredData() {
+      const q = search.value.trim().toLowerCase();
+      const selectedChoice = choiceFilter.value;
+      const selectedVendor = vendorFilter.value;
+      const pickedMode = pickedFilter.value;
+      const key = sortBy.value;
+      const dir = sortDir.value;
+
+      const out = lots
+        .map(mergedRecord)
+        .filter(r => {
+          const hay = `${r.lot} ${r.name} ${r.sire} ${r.dam} ${r.vendor}`.toLowerCase();
+          const okSearch = !q || hay.includes(q);
+          const choice = r.choice || 'undecided';
+          const okChoice = !selectedChoice || choice === selectedChoice;
+          const okVendor = !selectedVendor || (r.vendor || '') === selectedVendor;
+          const okPicked = pickedMode !== 'picked' || isPicked(r);
+          return okSearch && okChoice && okVendor && okPicked;
+        })
+        .sort((a, b) => compareValues(a, b, key, dir));
+
+      return out;
+    }
+
+    function render() {
+      const records = filteredData();
+      const shortlistOn = choiceFilter.value === 'yes' && pickedFilter.value === 'picked' && sortBy.value === 'total' && sortDir.value === 'desc';
+      shortlistBanner.style.display = shortlistOn ? 'block' : 'none';
       grid.innerHTML = '';
-      summary.textContent = `${records.length} lot${records.length === 1 ? '' : 's'} shown`;
+      const yesCount = Object.values(edits).filter(e => e.choice === 'yes').length;
+      const pickedCount = Object.values(edits).filter(isPicked).length;
+      summary.innerHTML = `
+        <div>${records.length} lot${records.length === 1 ? '' : 's'} shown</div>
+        <div>Saved choices: ${pickedCount} updated • Yes: ${yesCount}</div>
+      `;
 
       records.forEach(record => {
+        const secondLinkButton = record.secondLink
+          ? `<a href="${escapeAttr(record.secondLink)}" target="_blank" rel="noopener noreferrer" class="ghost">Second link</a>`
+          : `<button type="button" class="ghost" data-edit="${record.lot}">Update</button>`;
+
+        const notesHtml = record.notes
+          ? `<div class="meta"><span class="label">Notes:</span> ${escapeHtml(record.notes)}</div>`
+          : '';
+
         const card = document.createElement('article');
-        card.className = 'card';
-
-        const img = lotImage(record.lot);
-        const pdf = lotPedigree(record.lot);
-
+        card.className = `card choice-${choiceClass(record.choice)}`;
         card.innerHTML = `
           <div class="img-wrap">
-            <img src="${img}" alt="Lot ${record.lot}" loading="lazy"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'img-fallback\'>No image found for Lot ${record.lot}</div>'">
+            <img src="${lotImage(record.lot)}" alt="Lot ${record.lot}" loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'img-fallback\\'>No image found for Lot ${record.lot}</div>'">
           </div>
           <div class="content">
-            <div class="lot">Lot ${record.lot}</div>
-            <div class="name">${record.name}</div>
-            <div class="meta"><span class="label">Sire:</span> ${record.sire}</div>
-            <div class="meta"><span class="label">Dam:</span> ${record.dam}</div>
-            ${record.stable ? `<div class="meta"><span class="label">Consignor:</span> ${record.stable}</div>` : ''}
-            ${record.foaled ? `<div class="meta"><span class="label">Foaled:</span> ${record.foaled}</div>` : ''}
+            <div class="topline">
+              <div>
+                <div class="lot">Lot ${record.lot}</div>
+                <div class="name">${escapeHtml(record.name)}</div>
+              </div>
+              <div class="sex">${escapeHtml(record.sex || '')}</div>
+            </div>
+
+            <div class="choice-bar">
+              <span class="choice-pill ${choiceTextClass(record.choice)}">${choiceLabel(record.choice)}</span>
+            </div>
+
+            <div class="meta"><span class="label">Sire:</span> ${escapeHtml(record.sire)}</div>
+            <div class="meta"><span class="label">Dam:</span> ${escapeHtml(record.dam)}</div>
+            <div class="meta"><span class="label">Vendor:</span> ${escapeHtml(record.vendor)}</div>
+
+            <div class="score-row">
+              <div class="score-box"><div class="k">Physical</div><div class="v">${record.physicalScore || '-'}</div></div>
+              <div class="score-box"><div class="k">Pedigree</div><div class="v">${record.pedigreeScore || '-'}</div></div>
+              <div class="score-box"><div class="k">Total</div><div class="v">${record.total || '-'}</div></div>
+            </div>
+
+            ${notesHtml}
+
             <div class="actions">
-              <a href="${img}" target="_blank" rel="noopener noreferrer">Photo</a>
-              <a href="${pdf}" target="_blank" rel="noopener noreferrer" class="secondary">Pedigree</a>
+              <a href="${lotImage(record.lot)}" target="_blank" rel="noopener noreferrer">Photo</a>
+              <a href="${lotPedigree(record.lot)}" target="_blank" rel="noopener noreferrer" class="secondary">Pedigree</a>
+              <button type="button" data-edit="${record.lot}">Score / Update</button>
+              ${secondLinkButton}
             </div>
           </div>
         `;
         grid.appendChild(card);
       });
+
+      grid.querySelectorAll('[data-edit]').forEach(btn => {
+        btn.addEventListener('click', () => openEditor(Number(btn.dataset.edit)));
+      });
     }
 
-    function applyFilters() {
-      const q = search.value.trim().toLowerCase();
-      const sire = sireFilter.value;
-      render(data.filter(r => matches(r, q, sire)));
+    function openEditor(lot) {
+      currentLot = lot;
+      const base = lots.find(x => x.lot === lot);
+      const entry = getEdit(lot);
+
+      modalTitle.textContent = `Lot ${lot} — ${base.name}`;
+      modalSub.textContent = `${base.sire} x ${base.dam}`;
+
+      const radio = editForm.querySelectorAll('input[name="choice"]');
+      radio.forEach(r => r.checked = (entry.choice || 'undecided') === r.value);
+      if (!entry.choice) {
+        editForm.querySelector('input[name="choice"][value="undecided"]').checked = true;
+      }
+
+      physicalScore.value = entry.physicalScore || '';
+      pedigreeScore.value = entry.pedigreeScore || '';
+      secondLink.value = entry.secondLink || '';
+      notes.value = entry.notes || '';
+
+      dialog.showModal();
     }
 
-    search.addEventListener('input', applyFilters);
-    sireFilter.addEventListener('change', applyFilters);
-    clearBtn.addEventListener('click', () => {
+    function clearCurrentEntry() {
+      if (currentLot == null) return;
+      delete edits[String(currentLot)];
+      saveEdits();
+      dialog.close();
+      render();
+    }
+
+    function saveCurrentEntry() {
+      if (currentLot == null) return;
+      const choice = editForm.querySelector('input[name="choice"]:checked')?.value || 'undecided';
+      edits[String(currentLot)] = {
+        choice,
+        physicalScore: physicalScore.value,
+        pedigreeScore: pedigreeScore.value,
+        secondLink: secondLink.value.trim(),
+        notes: notes.value.trim()
+      };
+      if (!isPicked(edits[String(currentLot)])) {
+        delete edits[String(currentLot)];
+      }
+      saveEdits();
+      dialog.close();
+      render();
+    }
+
+    function exportData() {
+      const blob = new Blob([JSON.stringify(edits, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'racecoast-sales-window-updates.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          edits = parsed && typeof parsed === 'object' ? parsed : {};
+          saveEdits();
+          render();
+          alert('Updates imported.');
+        } catch (e) {
+          alert('Could not import that file.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function escapeAttr(str) {
+      return escapeHtml(str);
+    }
+
+    search.addEventListener('input', render);
+    choiceFilter.addEventListener('change', render);
+    vendorFilter.addEventListener('change', render);
+    pickedFilter.addEventListener('change', render);
+    sortBy.addEventListener('change', render);
+    sortDir.addEventListener('change', render);
+
+    clearFiltersBtn.addEventListener('click', () => {
       search.value = '';
-      sireFilter.value = '';
-      applyFilters();
+      choiceFilter.value = '';
+      vendorFilter.value = '';
+      pickedFilter.value = '';
+      sortBy.value = 'lot';
+      sortDir.value = 'desc';
+      render();
     });
 
-    populateSireFilter();
-    render(data);
+    showMyChoicesBtn.addEventListener('click', () => {
+      pickedFilter.value = 'picked';
+      choiceFilter.value = 'yes';
+      sortBy.value = 'total';
+      sortDir.value = 'desc';
+      render();
+    });
+
+    shortlistViewBtn.addEventListener('click', () => {
+      pickedFilter.value = 'picked';
+      choiceFilter.value = 'yes';
+      sortBy.value = 'total';
+      sortDir.value = 'desc';
+      render();
+    });
+
+    exportBtn.addEventListener('click', exportData);
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if (file) importData(file);
+      importFile.value = '';
+    });
+
+    editForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveCurrentEntry();
+    });
+    cancelBtn.addEventListener('click', () => dialog.close());
+    deleteEntryBtn.addEventListener('click', clearCurrentEntry);
+
+    populateVendorFilter();
+    render();
   </script>
 </body>
 </html>
