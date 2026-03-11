@@ -1,106 +1,284 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Race Coast Premier Yearling Sale</title>
-
-<style>
-
-body{
-    font-family: Arial;
-    background:#f4f4f4;
-}
-
-.container{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,250px);
-    gap:20px;
-}
-
-.card{
-    background:white;
-    border-radius:8px;
-    padding:10px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.2);
-    text-align:center;
-}
-
-.card img{
-    width:100%;
-    border-radius:5px;
-}
-
-button{
-    margin:5px;
-    padding:6px 10px;
-    border:none;
-    background:#1d3557;
-    color:white;
-    border-radius:4px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#457b9d;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Race Coast Sales Window</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --accent: #0f3d75;
+      --accent-2: #1d4f91;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      padding: 20px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+    }
+    .sub {
+      opacity: 0.92;
+      font-size: 14px;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 120px;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+    button {
+      background: white;
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    main {
+      padding: 16px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .summary {
+      color: var(--muted);
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    .img-wrap {
+      background: #eef2f7;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .img-fallback {
+      color: var(--muted);
+      font-size: 13px;
+      padding: 16px;
+      text-align: center;
+    }
+    .content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .lot {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .name {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .meta {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .label {
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .actions a {
+      text-decoration: none;
+      text-align: center;
+      background: var(--accent);
+      color: white;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .actions a.secondary {
+      background: #eef2ff;
+      color: var(--accent);
+      border: 1px solid #dbe4ff;
+    }
+    @media (max-width: 760px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1>2026 Premier Yearling Sale</h1>
+    <div class="sub">Auto-generated window for Race Coast images, pedigree links, and sire / dam details.</div>
+    <div class="controls">
+      <input id="search" type="text" placeholder="Search by lot, horse, sire, or dam" />
+      <select id="sireFilter">
+        <option value="">All sires</option>
+      </select>
+      <button id="clearBtn" type="button">Clear</button>
+    </div>
+  </header>
 
-<h1>2026 Premier Yearling Sale</h1>
+  <main>
+    <div id="summary" class="summary"></div>
+    <div id="grid" class="grid"></div>
+  </main>
 
-<div class="container" id="lots"></div>
+  <script>
+    const BASE = 'https://racecoastsales.co.za/wp-content/uploads/2026-PYS';
 
-<script>
+    const lots = [
+      { lot: 1, name: 'Lot 1', sire: 'Unknown Sire', dam: 'Unknown Dam', stable: '', foaled: '' },
+      { lot: 19, name: 'Lot 19', sire: 'Unknown Sire', dam: 'Unknown Dam', stable: '', foaled: '' }
+    ];
 
-const TOTAL_LOTS = 200   // change to full catalogue size
+    const fallbackLots = Array.from({ length: 270 }, (_, i) => ({
+      lot: i + 1,
+      name: `Lot ${i + 1}`,
+      sire: 'Unknown Sire',
+      dam: 'Unknown Dam',
+      stable: '',
+      foaled: ''
+    }));
 
-const container = document.getElementById("lots")
+    const data = lots.length > 2 ? lots : fallbackLots;
 
-for(let lot=1; lot<=TOTAL_LOTS; lot++){
+    const grid = document.getElementById('grid');
+    const search = document.getElementById('search');
+    const sireFilter = document.getElementById('sireFilter');
+    const clearBtn = document.getElementById('clearBtn');
+    const summary = document.getElementById('summary');
 
-    let img =
-`https://racecoastsales.co.za/wp-content/uploads/2026-PYS/2026-PYS-${lot}.jpg`
+    function uniqueSires(records) {
+      return [...new Set(records.map(x => x.sire).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    }
 
-    let pedigree =
-`https://racecoastsales.co.za/wp-content/uploads/2026-PYS/2026-PYS-${lot}.jpg`
+    function populateSireFilter() {
+      uniqueSires(data).forEach(sire => {
+        const option = document.createElement('option');
+        option.value = sire;
+        option.textContent = sire;
+        sireFilter.appendChild(option);
+      });
+    }
 
-    let card = document.createElement("div")
-    card.className = "card"
+    function lotImage(lot) {
+      return `${BASE}/2026-PYS-${lot}.jpg`;
+    }
 
-    card.innerHTML = `
-        <h3>Lot ${lot}</h3>
+    function lotPedigree(lot) {
+      return `${BASE}/2026-PYS-${lot}.pdf`;
+    }
 
-        <img src="${img}" onerror="this.style.display='none'">
+    function matches(record, q, sire) {
+      const hay = `${record.lot} ${record.name} ${record.sire} ${record.dam}`.toLowerCase();
+      const okText = !q || hay.includes(q);
+      const okSire = !sire || record.sire === sire;
+      return okText && okSire;
+    }
 
-        <br>
+    function render(records) {
+      grid.innerHTML = '';
+      summary.textContent = `${records.length} lot${records.length === 1 ? '' : 's'} shown`;
 
-        <button onclick="window.open('${img}','_blank')">
-        Pedigree
-        </button>
+      records.forEach(record => {
+        const card = document.createElement('article');
+        card.className = 'card';
 
-        <button onclick="searchSire(${lot})">
-        Sire
-        </button>
+        const img = lotImage(record.lot);
+        const pdf = lotPedigree(record.lot);
 
-        <button onclick="searchDam(${lot})">
-        Dam
-        </button>
-    `
+        card.innerHTML = `
+          <div class="img-wrap">
+            <img src="${img}" alt="Lot ${record.lot}" loading="lazy"
+                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'img-fallback\'>No image found for Lot ${record.lot}</div>'">
+          </div>
+          <div class="content">
+            <div class="lot">Lot ${record.lot}</div>
+            <div class="name">${record.name}</div>
+            <div class="meta"><span class="label">Sire:</span> ${record.sire}</div>
+            <div class="meta"><span class="label">Dam:</span> ${record.dam}</div>
+            ${record.stable ? `<div class="meta"><span class="label">Consignor:</span> ${record.stable}</div>` : ''}
+            ${record.foaled ? `<div class="meta"><span class="label">Foaled:</span> ${record.foaled}</div>` : ''}
+            <div class="actions">
+              <a href="${img}" target="_blank" rel="noopener noreferrer">Photo</a>
+              <a href="${pdf}" target="_blank" rel="noopener noreferrer" class="secondary">Pedigree</a>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
 
-    container.appendChild(card)
-}
+    function applyFilters() {
+      const q = search.value.trim().toLowerCase();
+      const sire = sireFilter.value;
+      render(data.filter(r => matches(r, q, sire)));
+    }
 
-function searchSire(lot){
-    alert("Connect sire database for Lot " + lot)
-}
+    search.addEventListener('input', applyFilters);
+    sireFilter.addEventListener('change', applyFilters);
+    clearBtn.addEventListener('click', () => {
+      search.value = '';
+      sireFilter.value = '';
+      applyFilters();
+    });
 
-function searchDam(lot){
-    alert("Connect dam database for Lot " + lot)
-}
-
-</script>
-
+    populateSireFilter();
+    render(data);
+  </script>
 </body>
 </html>
