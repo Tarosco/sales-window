@@ -6,372 +6,188 @@
   <title>Race Coast Sales Window</title>
   <style>
     :root {
-      --bg: #f3f5f9;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --line: #dbe1ea;
-      --accent: #0f3d75;
-      --accent-2: #1d4f91;
-      --yes: #dff7e7;
-      --no: #fde7e7;
-      --maybe: #eef2ff;
-      --chip: #eff3f8;
-      --gold: #8b6f00;
+      --bg:#f4f6fa; --card:#fff; --text:#1f2937; --muted:#6b7280; --line:#dde3ec;
+      --accent:#0f3d75; --accent2:#1d4f91; --soft:#eef3fb; --yes:#146534; --no:#b42318;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    header {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      padding: 18px 14px;
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    h1 { margin: 0 0 6px 0; font-size: 24px; }
-    .sub { font-size: 14px; opacity: .95; }
-    .controls {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr auto;
-      gap: 10px;
-      margin-top: 14px;
-    }
-    input, select, button, textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      font-size: 14px;
-      background: white;
-    }
-    button {
-      cursor: pointer;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    .toolbar button {
-      width: auto;
-      background: white;
-    }
-    main {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-    .summary {
-      color: var(--muted);
-      margin-bottom: 14px;
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 16px;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-      display: flex;
-      flex-direction: column;
-    }
-    .card.choice-yes { outline: 3px solid #b8e5c8; }
-    .card.choice-no { outline: 3px solid #f5c0c0; }
-    .card.choice-undecided { outline: 3px solid #d7def7; }
-    .img-wrap {
-      background: #eef2f7;
-      aspect-ratio: 4 / 3;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .img-fallback {
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-      padding: 16px;
-    }
-    .content {
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .topline {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: start;
-    }
-    .lot {
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-    }
-    .name {
-      font-size: 19px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin-top: 2px;
-    }
-    .sex {
-      background: var(--chip);
-      border-radius: 999px;
-      padding: 5px 10px;
-      font-size: 12px;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-    .meta { font-size: 14px; line-height: 1.45; }
-    .label { color: var(--muted); font-weight: 700; }
-    .score-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .score-box {
-      background: #f8fafc;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 8px;
-      text-align: center;
-    }
-    .score-box .k { color: var(--muted); font-size: 12px; }
-    .score-box .v { font-size: 20px; font-weight: 700; color: var(--gold); }
-    .choice-bar {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-top: 4px;
-    }
-    .choice-pill {
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    .choice-pill.yes { background: var(--yes); color: #146534; }
-    .choice-pill.no { background: var(--no); color: #a91c1c; }
-    .choice-pill.undecided { background: var(--maybe); color: #3847a8; }
-    .actions {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 8px;
-    }
-    .actions a, .actions button {
-      text-decoration: none;
-      text-align: center;
-      background: var(--accent);
-      color: white;
-      padding: 10px 12px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      border: none;
-    }
-    .actions .secondary {
-      background: #eef2ff;
-      color: var(--accent);
-      border: 1px solid #dbe4ff;
-    }
-    .actions .ghost {
-      background: #f8fafc;
-      color: var(--accent);
-      border: 1px solid var(--line);
-    }
-    dialog {
-      width: min(760px, calc(100vw - 24px));
-      border: none;
-      border-radius: 18px;
-      padding: 0;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    }
-    dialog::backdrop { background: rgba(15, 23, 42, 0.55); }
-    .modal-head {
-      padding: 16px 18px;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-    }
-    .modal-body {
-      padding: 16px 18px 18px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    .modal-body .full { grid-column: 1 / -1; }
-    .field label {
-      display: block;
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .radio-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      padding-top: 8px;
-    }
-    .radio-row label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 400;
-      color: var(--text);
-      margin: 0;
-    }
-    .modal-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 0 18px 18px;
-      flex-wrap: wrap;
-    }
-    .note {
-      font-size: 12px;
-      color: var(--muted);
-    }
-    @media (max-width: 980px) {
-      .controls { grid-template-columns: 1fr 1fr 1fr; }
-    }
-    @media (max-width: 760px) {
-      h1 { font-size: 20px; }
-      .controls { grid-template-columns: 1fr; }
-      .modal-body { grid-template-columns: 1fr; }
-      .actions { grid-template-columns: 1fr 1fr; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; background:var(--bg); color:var(--text); }
+    header { position:sticky; top:0; z-index:30; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; padding:12px 14px; box-shadow:0 2px 10px rgba(0,0,0,.12); }
+    .topbar { display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:10px; align-items:center; }
+    .brand h1 { margin:0; font-size:20px; }
+    .brand .sub { font-size:12px; opacity:.9; margin-top:2px; }
+    .topbar input { width:100%; min-width:0; padding:11px 12px; border:none; border-radius:12px; font-size:14px; }
+    .topbar button, .pillbtn { background:#fff; color:var(--accent); border:none; border-radius:12px; padding:11px 12px; font-weight:700; cursor:pointer; }
+    .quickbar { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .quickbar .pillbtn { padding:8px 12px; font-size:13px; }
+    .banner { display:none; margin-top:10px; background:#edf4ff; color:#1f3f8f; border-radius:12px; padding:10px 12px; font-size:13px; font-weight:700; }
+    main { max-width:1450px; margin:0 auto; padding:16px; }
+    .summary { display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; color:var(--muted); font-size:14px; margin-bottom:12px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:0 10px 24px rgba(0,0,0,.06); }
+    .imgwrap { aspect-ratio:4/3; background:#eef2f7; overflow:hidden; }
+    .imgwrap img { width:100%; height:100%; object-fit:cover; display:block; }
+    .imgfallback { height:100%; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:13px; padding:16px; text-align:center; }
+    .content { padding:14px; }
+    .rowtop { display:flex; gap:10px; justify-content:space-between; align-items:flex-start; }
+    .lot { color:var(--accent); font-weight:700; font-size:12px; letter-spacing:.5px; text-transform:uppercase; }
+    .name { font-size:19px; font-weight:700; line-height:1.2; margin-top:3px; }
+    .sex { background:var(--soft); color:var(--muted); border-radius:999px; padding:6px 10px; font-size:12px; white-space:nowrap; }
+    .meta { font-size:14px; line-height:1.45; margin-top:6px; }
+    .label { color:var(--muted); font-weight:700; }
+    .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .chip { border-radius:999px; padding:6px 10px; font-size:12px; font-weight:700; background:#eef2ff; color:#3947a8; }
+    .chip.yes { background:#e4f7ea; color:var(--yes); }
+    .chip.no { background:#fdecec; color:var(--no); }
+    .scores { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+    .score { background:#f8fafc; border:1px solid var(--line); border-radius:12px; padding:8px; text-align:center; }
+    .score .k { font-size:12px; color:var(--muted); }
+    .score .v { font-size:20px; font-weight:700; color:#8b6f00; }
+    .notes { margin-top:10px; font-size:13px; background:#fafcff; border:1px solid var(--line); border-radius:12px; padding:10px; }
+    .actions { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; }
+    .actions a, .actions button { text-decoration:none; text-align:center; border:none; border-radius:10px; padding:10px 10px; font-size:13px; font-weight:700; cursor:pointer; }
+    .actions .primary { background:var(--accent); color:#fff; }
+    .actions .secondary { background:#eef2ff; color:var(--accent); border:1px solid #dbe4ff; }
+    .actions .ghost { background:#f8fafc; color:var(--accent); border:1px solid var(--line); }
+    dialog { width:min(520px, calc(100vw - 24px)); border:none; border-radius:18px; padding:0; box-shadow:0 24px 70px rgba(0,0,0,.28); }
+    dialog::backdrop { background:rgba(15,23,42,.55); }
+    .drawer { width:min(420px, calc(100vw - 18px)); margin-right:10px; margin-left:auto; max-height:calc(100vh - 20px); overflow:auto; }
+    .modalhead { padding:16px 18px; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; }
+    .modalbody { padding:16px 18px 18px; }
+    .field { margin-bottom:12px; }
+    .field label { display:block; font-size:13px; color:var(--muted); font-weight:700; margin-bottom:6px; }
+    .field input, .field select, .field textarea { width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--line); font-size:14px; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .radioRow { display:flex; gap:12px; flex-wrap:wrap; padding-top:5px; }
+    .radioRow label { display:flex; gap:6px; align-items:center; font-weight:400; color:var(--text); }
+    .modalactions { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .modalactions button { border:none; border-radius:10px; padding:10px 12px; font-weight:700; cursor:pointer; }
+    .mutedbtn { background:#f8fafc; color:var(--accent); border:1px solid var(--line); }
+    .primarybtn { background:var(--accent); color:#fff; }
+    .dangerbtn { background:#fdecec; color:var(--no); }
+    .small { font-size:12px; color:var(--muted); }
+    @media (max-width:760px) {
+      .topbar { grid-template-columns:1fr auto; }
+      .brand { grid-column:1 / -1; }
+      .actions { grid-template-columns:1fr 1fr; }
+      .grid2 { grid-template-columns:1fr; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>2026 Premier Yearling Sale</h1>
-    <div class="sub">Search by lot, horse, sire, or dam. Save your yes/no decision, score physical and pedigree from 1 to 5, add notes and a second link, then filter only your picks and rank them by score.</div>
-    <div class="controls">
-      <input id="search" type="text" placeholder="Search lot, horse, sire, or dam" />
-      <select id="choiceFilter">
-        <option value="">All decisions</option>
-        <option value="yes">Yes only</option>
-        <option value="no">No only</option>
-        <option value="undecided">Undecided only</option>
-      </select>
-      <select id="vendorFilter">
-        <option value="">All vendors</option>
-      </select>
-      <select id="pickedFilter">
-        <option value="">All lots</option>
-        <option value="picked">Only scored / updated lots</option>
-      </select>
-      <select id="sortBy">
-        <option value="lot">Sort by lot</option>
-        <option value="physical">Sort by physical score</option>
-        <option value="pedigree">Sort by pedigree score</option>
-        <option value="total">Sort by total score</option>
-      </select>
-      <select id="sortDir">
-        <option value="desc">Highest first</option>
-        <option value="asc">Lowest first</option>
-      </select>
-      <button id="clearFiltersBtn" type="button">Clear</button>
+    <div class="topbar">
+      <div class="brand">
+        <h1>2026 Premier Yearling Sale</h1>
+        <div class="sub">Photos and pedigrees restored. Filters are tucked away in a compact panel.</div>
+      </div>
+      <input id="search" type="text" placeholder="Search lot, horse, sire, dam, vendor" />
+      <button id="openFiltersBtn" type="button">Filters</button>
     </div>
-    <div class="toolbar">
-      <button id="shortlistViewBtn" type="button">Shortlist view</button>
-      <button id="showMyChoicesBtn" type="button">Show my choices</button>
-      <button id="exportBtn" type="button">Export my updates</button>
-      <button id="importBtn" type="button">Import my updates</button>
-      <input id="importFile" type="file" accept="application/json" style="display:none" />
+    <div class="quickbar">
+      <button class="pillbtn" id="shortlistBtn" type="button">Shortlist</button>
+      <button class="pillbtn" id="allLotsBtn" type="button">All lots</button>
+      <button class="pillbtn" id="exportBtn" type="button">Export updates</button>
+      <button class="pillbtn" id="importBtn" type="button">Import updates</button>
+      <input id="importFile" type="file" accept="application/json" hidden />
     </div>
+    <div id="shortlistBanner" class="banner">Shortlist view is on: showing only YES horses, sorted by total highest first.</div>
   </header>
 
   <main>
     <div id="summary" class="summary"></div>
-    <div id="shortlistBanner" style="display:none;margin-bottom:14px;padding:12px 14px;background:#eef2ff;border:1px solid #dbe4ff;border-radius:12px;color:#1f3f8f;font-weight:700;">Shortlist view is on: showing only YES horses, sorted by total score highest first.</div>
     <div id="grid" class="grid"></div>
   </main>
 
+  <dialog id="filtersDialog" class="drawer">
+    <div class="modalhead"><div style="font-size:19px;font-weight:700;">Filters and sorting</div></div>
+    <div class="modalbody">
+      <div class="field">
+        <label for="vendorFilter">Vendor</label>
+        <select id="vendorFilter"><option value="">All vendors</option></select>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="choiceFilter">Decision</label>
+          <select id="choiceFilter">
+            <option value="">All decisions</option>
+            <option value="yes">Yes only</option>
+            <option value="no">No only</option>
+            <option value="undecided">Undecided only</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="pickedFilter">Updated status</label>
+          <select id="pickedFilter">
+            <option value="">All lots</option>
+            <option value="picked">Only scored / updated lots</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label for="sortBy">Sort by</label>
+          <select id="sortBy">
+            <option value="lot">Lot</option>
+            <option value="physical">Physical score</option>
+            <option value="pedigree">Pedigree score</option>
+            <option value="total">Total score</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="sortDir">Order</label>
+          <select id="sortDir">
+            <option value="asc">Lowest / A-Z first</option>
+            <option value="desc">Highest first</option>
+          </select>
+        </div>
+      </div>
+      <div class="modalactions">
+        <button class="mutedbtn" id="closeFiltersBtn" type="button">Close</button>
+        <button class="mutedbtn" id="clearFiltersBtn" type="button">Clear filters</button>
+      </div>
+    </div>
+  </dialog>
+
   <dialog id="editDialog">
-    <div class="modal-head">
+    <div class="modalhead">
       <div id="modalTitle" style="font-size:20px;font-weight:700;"></div>
       <div id="modalSub" style="font-size:13px;opacity:.95;margin-top:4px;"></div>
     </div>
     <form method="dialog" id="editForm">
-      <div class="modal-body">
-        <div class="field full">
+      <div class="modalbody">
+        <div class="field">
           <label>Decision</label>
-          <div class="radio-row">
+          <div class="radioRow">
             <label><input type="radio" name="choice" value="yes"> Yes</label>
             <label><input type="radio" name="choice" value="no"> No</label>
             <label><input type="radio" name="choice" value="undecided"> Undecided</label>
           </div>
         </div>
-
-        <div class="field">
-          <label for="physicalScore">Physical score (1 to 5)</label>
-          <select id="physicalScore">
-            <option value="">None</option>
-            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-            <option value="4">4</option><option value="5">5</option>
-          </select>
+        <div class="grid2">
+          <div class="field">
+            <label for="physicalScore">Physical score (1 to 5)</label>
+            <select id="physicalScore"><option value="">None</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+          </div>
+          <div class="field">
+            <label for="pedigreeScore">Pedigree score (1 to 5)</label>
+            <select id="pedigreeScore"><option value="">None</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+          </div>
         </div>
-
         <div class="field">
-          <label for="pedigreeScore">Pedigree score (1 to 5)</label>
-          <select id="pedigreeScore">
-            <option value="">None</option>
-            <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-            <option value="4">4</option><option value="5">5</option>
-          </select>
-        </div>
-
-        <div class="field full">
           <label for="secondLink">Second link</label>
           <input id="secondLink" type="url" placeholder="https://..." />
         </div>
-
-        <div class="field full">
+        <div class="field">
           <label for="notes">Notes</label>
           <textarea id="notes" rows="4" placeholder="Your notes..."></textarea>
         </div>
-
-        <div class="field full note">
-          Updates are saved in your browser automatically. Use Export to back up your scores and notes, or Import to restore them on another device.
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button id="deleteEntryBtn" type="button">Clear this entry</button>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <button type="button" id="cancelBtn">Cancel</button>
-          <button type="submit" id="saveBtn">Save</button>
+        <div class="small">Your decisions are saved in this browser automatically. Use Export to back them up to a file.</div>
+        <div class="modalactions">
+          <button class="dangerbtn" id="deleteEntryBtn" type="button">Clear entry</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="mutedbtn" id="cancelBtn" type="button">Cancel</button>
+            <button class="primarybtn" id="saveBtn" type="submit">Save</button>
+          </div>
         </div>
       </div>
     </form>
@@ -379,8 +195,8 @@
 
   <script>
     const BASE = 'https://racecoastsales.co.za/wp-content/uploads/2026-PYS';
-    const STORAGE_KEY = 'racecoast-sales-window-v2';
-    const lots = [];
+    const STORAGE_KEY = 'racecoast-sales-window-v3';
+    const lots = [{"lot": 1, "name": "DIVINE JUSTICE", "sex": "COLT", "sire": "DANON PLATINA (JPN)", "dam": "KAILANI", "vendor": "AMBIANCE STUD"}, {"lot": 2, "name": "KATY NICHOLE", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "KAY TEE PERRY", "vendor": "MAINE CHANCE FARMS"}, {"lot": 3, "name": "KINGSTON ICE", "sex": "COLT", "sire": "WHAT A WINTER", "dam": "KEARA", "vendor": "NARROW CREEK STUD"}, {"lot": 4, "name": "UNNAMED", "sex": "FILLY", "sire": "ONE WORLD", "dam": "KILEIGH", "vendor": "BLUE SKY THOROUGHBREDS"}, {"lot": 5, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "KILLER WOMAN", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 6, "name": "ROUNDABOUTMIDNIGHT", "sex": "COLT", "sire": "KINGMAN (GB)", "dam": "KIND OF BEAUTIFUL", "vendor": "DRAKENSTEIN STUD"}, {"lot": 7, "name": "UNNAMED", "sex": "FILLY", "sire": "RAFEEF (AUS)", "dam": "KINDAVAR", "vendor": "VOLMOED STUD"}, {"lot": 8, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "LA MAS BELLA", "vendor": "NORMANDY STUD"}, {"lot": 9, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "LADY ALBORNOZ", "vendor": "BUSH HILL STUD"}, {"lot": 10, "name": "UNNAMED", "sex": "FILLY", "sire": "WINTER CLOUD (AUS)", "dam": "LADY BORREGA", "vendor": "WINTER WOODS"}, {"lot": 11, "name": "PANDORA'S BOX", "sex": "FILLY", "sire": "MASTER OF MY FATE", "dam": "LADY MUFFET", "vendor": "RIDGEMONT"}, {"lot": 12, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "LADY WINDERMERE", "vendor": "BLUE SKY THOROUGHBREDS"}, {"lot": 13, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "LADY WISTERIA", "vendor": "VARSFONTEIN STUD"}, {"lot": 14, "name": "LE BONHEUR", "sex": "COLT", "sire": "HAWWAAM (IRE)", "dam": "LAURIE'S GOLD", "vendor": "SPRINGFIELD STUD"}, {"lot": 15, "name": "CITY OF TROY", "sex": "COLT", "sire": "CANE LIME 'N SODA", "dam": "LAVISH GAL", "vendor": "NARROW CREEK STUD"}, {"lot": 16, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "LITTLE MISS MAGIC", "vendor": "NARROW CREEK STUD"}, {"lot": 17, "name": "UNNAMED", "sex": "COLT", "sire": "MASTER OF MY FATE", "dam": "LITTLE MISS MAGIC", "vendor": "NARROW CREEK STUD"}, {"lot": 18, "name": "EIGHTH WONDER", "sex": "COLT", "sire": "POTALA PALACE", "dam": "LUCKY TAMARISK", "vendor": "RIVERTON STUD"}, {"lot": 19, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "LUCKY VALENTINE", "vendor": "DRUM STAR FARM"}, {"lot": 20, "name": "UNNAMED", "sex": "COLT", "sire": "HAWWAAM (IRE)", "dam": "LUCKY LEAR", "vendor": "RIDGEMONT"}, {"lot": 21, "name": "UNNAMED", "sex": "COLT", "sire": "DANON PLATINA (JPN)", "dam": "LULA'S WAY", "vendor": "AMBIANCE STUD"}, {"lot": 22, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "LUNA WISH", "vendor": "AMBIANCE STUD"}, {"lot": 23, "name": "PEPPERMINT CRISP", "sex": "FILLY", "sire": "THE UNITED STATES (IRE)", "dam": "MADAME SPEAKER", "vendor": "SOUTHEY CHRIS STABLES"}, {"lot": 24, "name": "UNNAMED", "sex": "COLT", "sire": "DANON PLATINA (JPN)", "dam": "MAGNIFICENT SEVEN", "vendor": "AMBIANCE STUD"}, {"lot": 25, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "MALAMBO", "vendor": "GREENACRES TRUST"}, {"lot": 26, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "MALMAISON", "vendor": "MAINE CHANCE FARMS"}, {"lot": 27, "name": "UNNAMED", "sex": "COLT", "sire": "POTALA PALACE", "dam": "MARY STUART", "vendor": "RIVERTON STUD"}, {"lot": 28, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "MAXI'S DAUGHTER", "vendor": "GREENACRES TRUST"}, {"lot": 29, "name": "UNNAMED", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "MERCY", "vendor": "RIVERTON STUD"}, {"lot": 30, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "MERRYDALE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 31, "name": "STAR TREK", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "MILK AND HONEY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 32, "name": "UNNAMED", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "MIMETES", "vendor": "RIDGEMONT"}, {"lot": 33, "name": "UNNAMED", "sex": "COLT", "sire": "FIRE AWAY (USA)", "dam": "MINA NO KOKORO", "vendor": "GREENACRES TRUST"}, {"lot": 34, "name": "UNNAMED", "sex": "COLT", "sire": "CANE LIME 'N SODA", "dam": "MISS COCO", "vendor": "RIDGEMONT"}, {"lot": 35, "name": "UNNAMED", "sex": "COLT", "sire": "MASTER OF MY FATE", "dam": "MISS MINA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 36, "name": "UNNAMED", "sex": "FILLY", "sire": "ORATORIO (IRE)", "dam": "MISS TRADE FAIR", "vendor": "DRAKENSTEIN STUD"}, {"lot": 37, "name": "UNNAMED", "sex": "FILLY", "sire": "MASTER OF MY FATE", "dam": "MISS VARLICIOUS", "vendor": "MORETON MANOR STUD"}, {"lot": 38, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "MONEY SURGER", "vendor": "DRAKENSTEIN STUD"}, {"lot": 39, "name": "UNNAMED", "sex": "FILLY", "sire": "REAL GONE KID", "dam": "MONEY TREE", "vendor": "DE KOCK RACING"}, {"lot": 40, "name": "BARBAROSSA", "sex": "COLT", "sire": "MALMOOS", "dam": "MORNING MIX", "vendor": "RIDGEMONT"}, {"lot": 41, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "MRS O", "vendor": "RIDGEMONT"}, {"lot": 42, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "MRS SIMPSON", "vendor": "MORETON MANOR STUD"}, {"lot": 43, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "MUNDAH", "vendor": "VARSFONTEIN STUD"}, {"lot": 44, "name": "UNNAMED", "sex": "FILLY", "sire": "WHAT A WINTER", "dam": "MURMURING SKY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 45, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "MUSICAL GLOW", "vendor": "BUSH HILL STUD"}, {"lot": 46, "name": "ESMERALDA", "sex": "FILLY", "sire": "MALMOOS", "dam": "MUSIC OF TIME", "vendor": "DRAKENSTEIN STUD"}, {"lot": 47, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "MYAMINE", "vendor": "VARSFONTEIN STUD"}, {"lot": 48, "name": "UNNAMED", "sex": "COLT", "sire": "POTALA PALACE", "dam": "MYTHICAL FLIGHT", "vendor": "RIVERTON STUD"}, {"lot": 49, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "NEEDLES AND PINS", "vendor": "DRUM STAR FARM"}, {"lot": 50, "name": "MAJESTIC REBEL", "sex": "COLT", "sire": "QUERARI (GER)", "dam": "NERINA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 51, "name": "UNNAMED", "sex": "COLT", "sire": "GIMMETHEGREENLIGHT (AUS)", "dam": "NOOR", "vendor": "DRAKENSTEIN STUD"}, {"lot": 52, "name": "STARLIGHT MINSTREL", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "NORTHEASTERN REGION", "vendor": "RIDGEMONT"}, {"lot": 53, "name": "UNNAMED", "sex": "FILLY", "sire": "LEGISLATE", "dam": "NOSY BE", "vendor": "RIDGEMONT"}, {"lot": 54, "name": "GIVEMETHESUN", "sex": "COLT", "sire": "POTALA PALACE", "dam": "OCEAN OF LOVE", "vendor": "AMBIANCE STUD"}, {"lot": 55, "name": "UNNAMED", "sex": "COLT", "sire": "WHAT A WINTER", "dam": "ODA TO JOY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 56, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "OLD FASHIONED", "vendor": "RIDGEMONT"}, {"lot": 57, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "ONE TOO MANY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 58, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "ONE WAY TICKET", "vendor": "DRAKENSTEIN STUD"}, {"lot": 59, "name": "UNNAMED", "sex": "FILLY", "sire": "THE UNITED STATES (IRE)", "dam": "OPENING NIGHT", "vendor": "DRAKENSTEIN STUD"}, {"lot": 60, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "OUR LADY PEACE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 61, "name": "STARS TO CATCH", "sex": "COLT", "sire": "POTALA PALACE", "dam": "OWAISHA", "vendor": "AMBIANCE STUD"}, {"lot": 62, "name": "UNNAMED", "sex": "FILLY", "sire": "SILVANO (GER)", "dam": "PAINTED ROCK", "vendor": "DRAKENSTEIN STUD"}, {"lot": 63, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "PARFAIT", "vendor": "DRAKENSTEIN STUD"}, {"lot": 64, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "PENNY LANE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 65, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "PEPPA", "vendor": "WINTER WOODS"}, {"lot": 66, "name": "UNNAMED", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "PERFECT ILLUSION", "vendor": "DRAKENSTEIN STUD"}, {"lot": 67, "name": "UNNAMED", "sex": "COLT", "sire": "GIMMETHEGREENLIGHT (AUS)", "dam": "PETARA", "vendor": "RIDGEMONT"}, {"lot": 68, "name": "SIENNA ROSE", "sex": "FILLY", "sire": "GIMMETHEGREENLIGHT (AUS)", "dam": "PETRONELLA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 69, "name": "UNNAMED", "sex": "FILLY", "sire": "ONE WORLD", "dam": "PICKET FENCE", "vendor": "BLUE SKY THOROUGHBREDS"}, {"lot": 70, "name": "ROSE OF DESIRE", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "PIN UP DOLL", "vendor": "AMBIANCE STUD"}, {"lot": 71, "name": "UNNAMED", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "PLATINA PRINCESS", "vendor": "DRAKENSTEIN STUD"}, {"lot": 72, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "POLLY'S ARK", "vendor": "DRAKENSTEIN STUD"}, {"lot": 73, "name": "UNNAMED", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "POPPY'S BABY", "vendor": "WILGERBOSDRIFT"}, {"lot": 74, "name": "VIBE CHECK", "sex": "COLT", "sire": "CANE LIME 'N SODA", "dam": "POWDER BLUE", "vendor": "MORETON MANOR STUD"}, {"lot": 75, "name": "MIRACLE KID", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "PRIVATE DANCER", "vendor": "DRAKENSTEIN STUD"}, {"lot": 76, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "PRINCESS RHODES", "vendor": "DRAKENSTEIN STUD"}, {"lot": 77, "name": "UNNAMED", "sex": "FILLY", "sire": "RAFEEF (AUS)", "dam": "PROMISED MIST", "vendor": "BUSH HILL STUD"}, {"lot": 78, "name": "HOT GOSSIP", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "QUEEN'S COMMAND", "vendor": "DRAKENSTEIN STUD"}, {"lot": 79, "name": "UNNAMED", "sex": "COLT", "sire": "WHAT A WINTER", "dam": "QUILATE'S QUEEN", "vendor": "DRAKENSTEIN STUD"}, {"lot": 80, "name": "THE DIVA", "sex": "FILLY", "sire": "MALMOOS", "dam": "QUINTA DA LUZ", "vendor": "WILGERBOSDRIFT"}, {"lot": 81, "name": "UNNAMED", "sex": "COLT", "sire": "Vercingetorix", "dam": "RADIANT CAPTAIN", "vendor": "DRAKENSTEIN STUD"}, {"lot": 82, "name": "ZIGGY'S DREAM", "sex": "COLT", "sire": "POTALA PALACE", "dam": "RAINBOW CREEK", "vendor": "RIVERTON STUD"}, {"lot": 83, "name": "LADY MARMALADE", "sex": "FILLY", "sire": "RAFEEF (AUS)", "dam": "RAISE THE BAR", "vendor": "BUSH HILL STUD"}, {"lot": 84, "name": "SOFIA'S STAR", "sex": "FILLY", "sire": "MASTER OF MY FATE", "dam": "RAT BURANA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 85, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "READ MY LIPS", "vendor": "MORETON MANOR STUD"}, {"lot": 86, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "REDBERRY LANE", "vendor": "NARROW CREEK STUD"}, {"lot": 87, "name": "ELLIOT PIPER", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "RED HERRING", "vendor": "DRAKENSTEIN STUD"}, {"lot": 88, "name": "VIREN'S BAY", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "REGINA MUNDI", "vendor": "RIVEER STUD"}, {"lot": 89, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "REINE DU CAP", "vendor": "DRAKENSTEIN STUD"}, {"lot": 90, "name": "UNNAMED", "sex": "COLT", "sire": "SOQRAT (AUS)", "dam": "RENAISSANCE ART", "vendor": "NORMANDY STUD"}, {"lot": 91, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "REV DE VIE", "vendor": "VARSFONTEIN STUD"}, {"lot": 92, "name": "GOLDEN PARACHUTE", "sex": "COLT", "sire": "QUERARI (GER)", "dam": "REVOLTEE", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 93, "name": "AFRICAN DAISY", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "RIVER RHONE", "vendor": "AMBIANCE STUD"}, {"lot": 94, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "ROCKONNABABY", "vendor": "VARSFONTEIN STUD"}, {"lot": 95, "name": "UNNAMED", "sex": "COLT", "sire": "ACT OF WAR", "dam": "ROSA ROSA", "vendor": "SHALIMAR STUD"}, {"lot": 96, "name": "STELLAROTICA", "sex": "FILLY", "sire": "MALMOOS", "dam": "ROSERAI", "vendor": "DRAKENSTEIN STUD"}, {"lot": 97, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "ROYAL UTOPIA", "vendor": "VARSFONTEIN STUD"}, {"lot": 98, "name": "SHOOT THE BREEZE", "sex": "FILLY", "sire": "ONE WORLD", "dam": "ROY'S MOON", "vendor": "DRAKENSTEIN STUD"}, {"lot": 99, "name": "UNNAMED", "sex": "COLT", "sire": "DANON PLATINA (JPN)", "dam": "RUBY RACKET", "vendor": "AMBIANCE STUD"}, {"lot": 100, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "RUSSIAN EMPIRE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 101, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "SACRED Ibis", "vendor": "SHALIMAR STUD"}, {"lot": 102, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "SAIL", "vendor": "VARSFONTEIN STUD"}, {"lot": 103, "name": "KING OF SAXONY", "sex": "COLT", "sire": "SOQRAT (AUS)", "dam": "SAILAWAY", "vendor": "MORETON MANOR STUD"}, {"lot": 104, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "SALIA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 105, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "SARAWAK", "vendor": "DRAKENSTEIN STUD"}, {"lot": 106, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "SATIN FLOWER", "vendor": "DRAKENSTEIN STUD"}, {"lot": 107, "name": "UNNAMED", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "SECRET DYNASTY", "vendor": "WINTER WOODS"}, {"lot": 108, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "SECRET MAGNOLIA", "vendor": "VARSFONTEIN STUD"}, {"lot": 109, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "SECRETSUNTOLD", "vendor": "DRAKENSTEIN STUD"}, {"lot": 110, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "SEASONS IN AFRICA", "vendor": "MORETON MANOR STUD"}, {"lot": 111, "name": "CHASING HORIZONS", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "SEEMYVISION", "vendor": "DRAKENSTEIN STUD"}, {"lot": 112, "name": "UNNAMED", "sex": "FILLY", "sire": "RAFEEF (AUS)", "dam": "SEMRA", "vendor": "BUSH HILL STUD"}, {"lot": 113, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "SHIMMERING JET", "vendor": "DRUM STAR FARM"}, {"lot": 114, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "SILVER FANTASY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 115, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "SILVIA LOUISE", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 116, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "SILVANA'S SONG", "vendor": "AMBIANCE STUD"}, {"lot": 117, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "SILVER JANNAH", "vendor": "DRAKENSTEIN STUD"}, {"lot": 118, "name": "UNNAMED", "sex": "COLT", "sire": "WHAT A WINTER", "dam": "SINN'S POWER", "vendor": "DRAKENSTEIN STUD"}, {"lot": 119, "name": "CAPTAINS LOG", "sex": "COLT", "sire": "CAPTAIN OF ALL", "dam": "SIX BLUE NOTES", "vendor": "RICHALTIS THOROUGHBREDS"}, {"lot": 120, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "SKYFALL", "vendor": "AMBIANCE STUD"}, {"lot": 121, "name": "STONE CIRCLE", "sex": "FILLY", "sire": "MALMOOS", "dam": "SMITTEN", "vendor": "RIDGEMONT"}, {"lot": 122, "name": "SUPER SOLDIER", "sex": "COLT", "sire": "ORATORIO (IRE)", "dam": "SOCCER MOM", "vendor": "GREENACRES TRUST"}, {"lot": 123, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "SOMETHING OF VALUE", "vendor": "RIDGEMONT"}, {"lot": 124, "name": "OCEAN'S ECHO", "sex": "COLT", "sire": "MASTER OF MY FATE", "dam": "SONEVA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 125, "name": "ROYAL WHISPER", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "SOVEREIGN SECRET", "vendor": "DRAKENSTEIN STUD"}, {"lot": 126, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "SPECTRUM", "vendor": "DRAKENSTEIN STUD"}, {"lot": 127, "name": "UNNAMED", "sex": "COLT", "sire": "ONE WORLD", "dam": "SPRING WONDER", "vendor": "BLUE SKY THOROUGHBREDS"}, {"lot": 128, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "STAR CHESTNUT", "vendor": "WILGERBOSDRIFT"}, {"lot": 129, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "STAR JET", "vendor": "GREENACRES TRUST"}, {"lot": 130, "name": "UNNAMED", "sex": "FILLY", "sire": "LEGISLATE", "dam": "STAR JET", "vendor": "VARSFONTEIN STUD"}, {"lot": 131, "name": "UNNAMED", "sex": "COLT", "sire": "Vercingetorix", "dam": "STARLIGHT", "vendor": "DRAKENSTEIN STUD"}, {"lot": 132, "name": "SAIL THE SKY", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "STARRY SKY", "vendor": "WINTER WOODS"}, {"lot": 133, "name": "UNNAMED", "sex": "FILLY", "sire": "ACT OF WAR", "dam": "STAR VEGA", "vendor": "SHALIMAR STUD"}, {"lot": 134, "name": "UNNAMED", "sex": "COLT", "sire": "GIMMETHEGREENLIGHT (AUS)", "dam": "STELLA MIA", "vendor": "RIDGEMONT"}, {"lot": 135, "name": "UNNAMED", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "STOPTHINKINGOFME", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 136, "name": "UNNAMED", "sex": "FILLY", "sire": "CAPTAIN OF ALL", "dam": "STYLE QUEEN", "vendor": "RICHALTIS THOROUGHBREDS"}, {"lot": 137, "name": "WIND RUNNER", "sex": "COLT", "sire": "MALMOOS", "dam": "SULTRY SUMMER", "vendor": "VARSFONTEIN STUD"}, {"lot": 138, "name": "REDONDO BEACH", "sex": "FILLY", "sire": "HAWWAAM (IRE)", "dam": "SUMMER CLOUD", "vendor": "RIDGEMONT"}, {"lot": 139, "name": "UNNAMED", "sex": "FILLY", "sire": "THE UNITED STATES (IRE)", "dam": "SUMMER'S EVE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 140, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "SUNSHINE DAY", "vendor": "WINTER WOODS"}, {"lot": 141, "name": "UNNAMED", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "SUNSHINE GIRL", "vendor": "DRAKENSTEIN STUD"}, {"lot": 142, "name": "UNNAMED", "sex": "COLT", "sire": "Vercingetorix", "dam": "SUPER SILKY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 143, "name": "NORDIC LIGHTS", "sex": "COLT", "sire": "MALMOOS", "dam": "SUPER SILKY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 144, "name": "UNNAMED", "sex": "FILLY", "sire": "Vercingetorix", "dam": "SUPERSTAR MODEL", "vendor": "DRAKENSTEIN STUD"}, {"lot": 145, "name": "FALL OUT BOY", "sex": "COLT", "sire": "MALMOOS", "dam": "SURREAL", "vendor": "RIDGEMONT"}, {"lot": 146, "name": "UNNAMED", "sex": "FILLY", "sire": "ACT OF WAR", "dam": "SWEET PLEASURES", "vendor": "SHALIMAR STUD"}, {"lot": 147, "name": "UNNAMED", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "SWEET THERESA", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 148, "name": "UNNAMED", "sex": "COLT", "sire": "FIRE AWAY (USA)", "dam": "TACOA", "vendor": "GREENACRES TRUST"}, {"lot": 149, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "TAHOE", "vendor": "AMBIANCE STUD"}, {"lot": 150, "name": "MERRY GOLDEN STAR", "sex": "FILLY", "sire": "THE UNITED STATES (IRE)", "dam": "TAJMAH", "vendor": "VARSFONTEIN STUD"}, {"lot": 151, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "TAILEND CHARLIE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 152, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "TAKEDOWN", "vendor": "GREENACRES TRUST"}, {"lot": 153, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "TALLY-HO", "vendor": "RIDGEMONT"}, {"lot": 154, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "TARA'S FORCE", "vendor": "RIDGEMONT"}, {"lot": 155, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "TARRAGONA", "vendor": "AMBIANCE STUD"}, {"lot": 156, "name": "HOT LINE", "sex": "COLT", "sire": "RAFEEF (AUS)", "dam": "TARRY", "vendor": "BUSH HILL STUD"}, {"lot": 157, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "TEMPERATE LADY", "vendor": "RIDGEMONT"}, {"lot": 158, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "TEMPTING LADY", "vendor": "WILGERBOSDRIFT"}, {"lot": 159, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "TERTIAN", "vendor": "MORETON MANOR STUD"}, {"lot": 160, "name": "UMSHINI", "sex": "FILLY", "sire": "MALMOOS", "dam": "TEVARA", "vendor": "MAINE CHANCE FARMS"}, {"lot": 161, "name": "UNNAMED", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "THEN NOW ALWAYS", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 162, "name": "UNNAMED", "sex": "FILLY", "sire": "CAPTAIN OF ALL", "dam": "THREE TREES", "vendor": "RICHALTIS THOROUGHBREDS"}, {"lot": 163, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "TIME TO CHERISH", "vendor": "DRAKENSTEIN STUD"}, {"lot": 164, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "TOBE'S LASS", "vendor": "VARSFONTEIN STUD"}, {"lot": 165, "name": "SWEET ESCAPE", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "TOBE'S LASS", "vendor": "VARSFONTEIN STUD"}, {"lot": 166, "name": "UNNAMED", "sex": "FILLY", "sire": "THE UNITED STATES (IRE)", "dam": "TOGETHER AGAIN", "vendor": "DRAKENSTEIN STUD"}, {"lot": 167, "name": "LITTLE MISS MAGIC", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "TOLTECA", "vendor": "AMBIANCE STUD"}, {"lot": 168, "name": "QUEEN OF MEMPHIS", "sex": "FILLY", "sire": "Vercingetorix", "dam": "TOUCH OF FATE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 169, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "TOY SHOP", "vendor": "RIDGEMONT"}, {"lot": 170, "name": "UNNAMED", "sex": "FILLY", "sire": "ACT OF WAR", "dam": "TRAILING STAR", "vendor": "SHALIMAR STUD"}, {"lot": 171, "name": "LOMA LINDA", "sex": "FILLY", "sire": "MALMOOS", "dam": "TRIP TO HEAVEN", "vendor": "VARSFONTEIN STUD"}, {"lot": 172, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "TURQOISE SONG", "vendor": "RIDGEMONT"}, {"lot": 173, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "TWICE AS SMART", "vendor": "DRAKENSTEIN STUD"}, {"lot": 174, "name": "DR WHO", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "TWO TONE ROCKA", "vendor": "WINTER WOODS"}, {"lot": 175, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "UNANNOUNCED", "vendor": "RIDGEMONT"}, {"lot": 176, "name": "MOONLIGHT KISS", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "UNCONDITIONAL LOVE", "vendor": "RIVERTON STUD"}, {"lot": 177, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "UNEQUALED", "vendor": "GREENACRES TRUST"}, {"lot": 178, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "UNWIND", "vendor": "DRUM STAR FARM"}, {"lot": 179, "name": "ANGEL CITY", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "VARS VICKY", "vendor": "VARSFONTEIN STUD"}, {"lot": 180, "name": "TOP CLASS", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "VAUCLUSE BAY", "vendor": "MORETON MANOR STUD"}, {"lot": 181, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "VEILED VISION", "vendor": "DRAKENSTEIN STUD"}, {"lot": 182, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "VIENNA WOODS", "vendor": "RIDGEMONT"}, {"lot": 183, "name": "GOLDEN DAWN", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "VIEW OF THE WORLD", "vendor": "RIVERTON STUD"}, {"lot": 184, "name": "MAJESTIC CROWN", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "VINTAGE CRYSTAL", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 185, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "VIRGINIA WATER", "vendor": "RIDGEMONT"}, {"lot": 186, "name": "UNNAMED", "sex": "FILLY", "sire": "Vercingetorix", "dam": "VISUAL EFFECT", "vendor": "DRAKENSTEIN STUD"}, {"lot": 187, "name": "UNNAMED", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "VIVA AL RIO", "vendor": "WINTER WOODS"}, {"lot": 188, "name": "UNNAMED", "sex": "COLT", "sire": "CANE LIME 'N SODA", "dam": "WAITY KATY", "vendor": "NARROW CREEK STUD"}, {"lot": 189, "name": "ONE TIME LOVER", "sex": "COLT", "sire": "ONE WORLD", "dam": "WALTZING AL", "vendor": "NORMANDY STUD"}, {"lot": 190, "name": "UNNAMED", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "WATER BABY", "vendor": "AMBIANCE STUD"}, {"lot": 191, "name": "UNNAMED", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "WATERHYACINTH (NZ)", "vendor": "AMBIANCE STUD"}, {"lot": 192, "name": "UNNAMED", "sex": "COLT", "sire": "CANE LIME 'N SODA", "dam": "WHATABEAUTY", "vendor": "DRAKENSTEIN STUD"}, {"lot": 193, "name": "UNNAMED", "sex": "FILLY", "sire": "POTALA PALACE", "dam": "WHATALADY", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 194, "name": "UNNAMED", "sex": "COLT", "sire": "DANON PLATINA (JPN)", "dam": "WHATSINAHAME", "vendor": "AMBIANCE STUD"}, {"lot": 195, "name": "CREME BRULEE", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "WILD LARK", "vendor": "SHALIMAR STUD"}, {"lot": 196, "name": "SKINNY DIP", "sex": "FILLY", "sire": "Vercingetorix", "dam": "WINDRUSH", "vendor": "DRAKENSTEIN STUD"}, {"lot": 197, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "WINDSOR BEACH", "vendor": "DRAKENSTEIN STUD"}, {"lot": 198, "name": "GOLDEN FORTUNE", "sex": "COLT", "sire": "POTALA PALACE", "dam": "WINTER CHILL", "vendor": "RIVERTON STUD"}, {"lot": 199, "name": "UNNAMED", "sex": "FILLY", "sire": "HAWWAAM (IRE)", "dam": "WINTER'S EMBRACE", "vendor": "SPRINGFIELD STUD"}, {"lot": 200, "name": "LITTLE VENICE", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "WITNESS TO A MURDER", "vendor": "DRUM STAR FARM"}, {"lot": 201, "name": "AWESOME GLORY", "sex": "FILLY", "sire": "ONE WORLD", "dam": "WOOD NYMPH", "vendor": "DRAKENSTEIN STUD"}, {"lot": 202, "name": "NEW DAWN", "sex": "FILLY", "sire": "HAWWAAM (IRE)", "dam": "WRITTEN IN STARS", "vendor": "RIDGEMONT"}, {"lot": 203, "name": "MAGIC DIAMOND", "sex": "FILLY", "sire": "MALMOOS", "dam": "WYLIE HALL", "vendor": "VARSFONTEIN STUD"}, {"lot": 204, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "XANADU", "vendor": "AMBIANCE STUD"}, {"lot": 205, "name": "UNNAMED", "sex": "COLT", "sire": "RAFEEF (AUS)", "dam": "YOCO", "vendor": "BUSH HILL STUD"}, {"lot": 206, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "YOU LET ME DOWN", "vendor": "VARSFONTEIN STUD"}, {"lot": 207, "name": "UNNAMED", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "ZEAL AND ZEST", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 208, "name": "ROYAL PORTUGAL", "sex": "FILLY", "sire": "ONE WORLD", "dam": "ZILZAAL", "vendor": "BUSH HILL STUD"}, {"lot": 209, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "ZIPPY ZITHER", "vendor": "NORMANDY STUD"}, {"lot": 210, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "ZIVA LA WINTER", "vendor": "DRAKENSTEIN STUD"}, {"lot": 211, "name": "UNNAMED", "sex": "COLT", "sire": "DANON PLATINA (JPN)", "dam": "A LITTLE BIT NUTTY", "vendor": "AMBIANCE STUD"}, {"lot": 212, "name": "KABOOM", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "A PLACE IN THE SUN", "vendor": "DRAKENSTEIN STUD"}, {"lot": 213, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "ABBEY", "vendor": "RIDGEMONT"}, {"lot": 214, "name": "WATERMELON SUGAR", "sex": "FILLY", "sire": "MALMOOS", "dam": "ABOVE EMERALDS", "vendor": "VARSFONTEIN STUD"}, {"lot": 215, "name": "THE BOHEMIAN", "sex": "COLT", "sire": "MALMOOS", "dam": "ABSOLUTELY FABULOUS", "vendor": "WILGERBOSDRIFT"}, {"lot": 216, "name": "UNNAMED", "sex": "COLT", "sire": "FIRE AWAY (USA)", "dam": "ACCACIA", "vendor": "GREENACRES TRUST"}, {"lot": 217, "name": "UNNAMED", "sex": "COLT", "sire": "Vercingetorix", "dam": "AFRICAN CRIMSON", "vendor": "DRAKENSTEIN STUD"}, {"lot": 218, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "AIDEN'S GIRL", "vendor": "AMBIANCE STUD"}, {"lot": 219, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "ALEXA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 220, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "ALNAAS", "vendor": "VARSFONTEIN STUD"}, {"lot": 221, "name": "STEP ASIDE", "sex": "COLT", "sire": "HAWWAAM (IRE)", "dam": "ALTAYA", "vendor": "SPRINGFIELD STUD"}, {"lot": 222, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "AMUR AFFAIR", "vendor": "GREENACRES TRUST"}, {"lot": 223, "name": "CALL ME THE BOSS", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "ANJELICA HUSTON", "vendor": "DRUM STAR FARM"}, {"lot": 224, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "ANNATJIE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 225, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "ANOTHER MISTAKE", "vendor": "RIDGEMONT"}, {"lot": 226, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "ANTARCITCA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 227, "name": "CHAMPAGNE ON ICE", "sex": "FILLY", "sire": "RAFEEF (AUS)", "dam": "AQUA DELLA", "vendor": "BUSH HILL STUD"}, {"lot": 228, "name": "UNNAMED", "sex": "FILLY", "sire": "ONE WORLD", "dam": "ARABIAN PEARL", "vendor": "DRAKENSTEIN STUD"}, {"lot": 229, "name": "HEMINGWAY'S WISDOM", "sex": "COLT", "sire": "SOQRAT (AUS)", "dam": "ARCHANGEL'S KISS", "vendor": "MORETON MANOR STUD"}, {"lot": 230, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "ARMADALE", "vendor": "AMBIANCE STUD"}, {"lot": 231, "name": "UNNAMED", "sex": "FILLY", "sire": "QUERARI (GER)", "dam": "ART DECO", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 232, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "ARTICLE", "vendor": "VARSFONTEIN STUD"}, {"lot": 233, "name": "STORMY MONDAY", "sex": "FILLY", "sire": "NEW PREDATOR (AUS)", "dam": "ARTIC AURORA", "vendor": "WINTER WOODS"}, {"lot": 234, "name": "UNNAMED", "sex": "FILLY", "sire": "MALMOOS", "dam": "ASH CLOUD", "vendor": "RIDGEMONT"}, {"lot": 235, "name": "TWICE AROUND", "sex": "FILLY", "sire": "TWICE OVER (GB)", "dam": "ATHENIAN", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 236, "name": "UNNAMED", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "ATLANTIC SLIP", "vendor": "MILLSTREAM FARM"}, {"lot": 237, "name": "FLOWERS OF ALASKA", "sex": "FILLY", "sire": "CANE LIME 'N SODA", "dam": "ATVAR", "vendor": "MILLSTREAM FARM"}, {"lot": 238, "name": "UNNAMED", "sex": "COLT", "sire": "FIRE AWAY (USA)", "dam": "AVE MARIA", "vendor": "GREENACRES TRUST"}, {"lot": 239, "name": "LIONHEART", "sex": "COLT", "sire": "SOQRAT (AUS)", "dam": "BADGER CREEK", "vendor": "MILLSTREAM FARM"}, {"lot": 240, "name": "UNNAMED", "sex": "COLT", "sire": "QUERARI (GER)", "dam": "BALCLUTHA", "vendor": "KLAWERVLEI STUD (AS AGENT)"}, {"lot": 241, "name": "UNNAMED", "sex": "COLT", "sire": "HAWWAAM (IRE)", "dam": "BANDOL", "vendor": "SPRINGFIELD STUD"}, {"lot": 242, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "BARNBOUGLE", "vendor": "AMBIANCE STUD"}, {"lot": 243, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "BATTLE MAIDEN", "vendor": "WILGERBOSDRIFT"}, {"lot": 244, "name": "UNNAMED", "sex": "FILLY", "sire": "MASTER OF MY FATE", "dam": "BAUBLES AND BEADS", "vendor": "DRAKENSTEIN STUD"}, {"lot": 245, "name": "UNNAMED", "sex": "COLT", "sire": "VERCINGETORIX", "dam": "BEAUX ARTS", "vendor": "DRAKENSTEIN STUD"}, {"lot": 246, "name": "THE RED LADY", "sex": "FILLY", "sire": "SOQRAT (AUS)", "dam": "BECQUEREL", "vendor": "MILLSTREAM FARM"}, {"lot": 247, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "BELA-BELA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 248, "name": "UNNAMED", "sex": "COLT", "sire": "GIMMETHEGREENLIGHT (AUS)", "dam": "BELLE ROSE", "vendor": "RIDGEMONT"}, {"lot": 249, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "BELLHOUSE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 250, "name": "PERUVIAN SUMMER", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "BE MY LOVE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 251, "name": "UNNAMED", "sex": "COLT", "sire": "Vercingetorix", "dam": "BEWITCHED", "vendor": "DRAKENSTEIN STUD"}, {"lot": 252, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "BEZAMODELS", "vendor": "WINTER WOODS"}, {"lot": 253, "name": "UNNAMED", "sex": "FILLY", "sire": "MASTER OF MY FATE", "dam": "BI POT", "vendor": "RIDGEMONT"}, {"lot": 254, "name": "ATTABOY", "sex": "COLT", "sire": "SOQRAT (AUS)", "dam": "BIG SUGAR", "vendor": "MILLSTREAM FARM"}, {"lot": 255, "name": "UNNAMED", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "BIT OF BANTER", "vendor": "DRAKENSTEIN STUD"}, {"lot": 256, "name": "THE FRONT RUNNER", "sex": "FILLY", "sire": "ONE WORLD", "dam": "BLACK TULIP", "vendor": "SHALIMAR STUD"}, {"lot": 257, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "BLAKE", "vendor": "AMBIANCE STUD"}, {"lot": 258, "name": "UNNAMED", "sex": "FILLY", "sire": "VERCINGETORIX", "dam": "BLIZZARD BELLE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 259, "name": "ALL SHOOK UP", "sex": "COLT", "sire": "SOQRAT (AUS)", "dam": "BLOODLINE", "vendor": "MILLSTREAM FARM"}, {"lot": 260, "name": "UNNAMED", "sex": "FILLY", "sire": "FIRE AWAY (USA)", "dam": "BLUEBERRY GARDENS", "vendor": "GREENACRES TRUST"}, {"lot": 261, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "BLUEMA CHICA", "vendor": "DRAKENSTEIN STUD"}, {"lot": 262, "name": "UNNAMED", "sex": "COLT", "sire": "MALMOOS", "dam": "BLUE RHONE SKY", "vendor": "VARSFONTEIN STUD"}, {"lot": 263, "name": "UNNAMED", "sex": "FILLY", "sire": "DANON PLATINA (JPN)", "dam": "BOBTAIL", "vendor": "AMBIANCE STUD"}, {"lot": 264, "name": "UNNAMED", "sex": "COLT", "sire": "ERUPT (IRE)", "dam": "BONNE BOUCHE", "vendor": "DRAKENSTEIN STUD"}, {"lot": 265, "name": "IN THE LOOP", "sex": "COLT", "sire": "NEW PREDATOR (AUS)", "dam": "BOOM BANG", "vendor": "WILGERBOSDRIFT"}, {"lot": 266, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "BRAVE MOVE", "vendor": "VARSFONTEIN STUD"}, {"lot": 267, "name": "UNNAMED", "sex": "FILLY", "sire": "ERUPT (IRE)", "dam": "BREAK THE SPELL", "vendor": "DRAKENSTEIN STUD"}, {"lot": 268, "name": "UNNAMED", "sex": "FILLY", "sire": "THE UNITED STATES (IRE)", "dam": "BREATHLESS BERTHA", "vendor": "VARSFONTEIN STUD"}, {"lot": 269, "name": "UNNAMED", "sex": "COLT", "sire": "MASTER OF MY FATE", "dam": "BRIGTNUMBERFOUR", "vendor": "DRAKENSTEIN STUD"}, {"lot": 270, "name": "UNNAMED", "sex": "COLT", "sire": "KOMMETDIEDING", "dam": "JET SET MODEL", "vendor": "KLAWERVLEI STUD (AS AGENT)"}];
 
     let edits = loadEdits();
     let currentLot = null;
@@ -388,18 +204,21 @@
     const grid = document.getElementById('grid');
     const summary = document.getElementById('summary');
     const search = document.getElementById('search');
-    const choiceFilter = document.getElementById('choiceFilter');
+    const openFiltersBtn = document.getElementById('openFiltersBtn');
+    const filtersDialog = document.getElementById('filtersDialog');
+    const closeFiltersBtn = document.getElementById('closeFiltersBtn');
     const vendorFilter = document.getElementById('vendorFilter');
+    const choiceFilter = document.getElementById('choiceFilter');
     const pickedFilter = document.getElementById('pickedFilter');
     const sortBy = document.getElementById('sortBy');
     const sortDir = document.getElementById('sortDir');
     const clearFiltersBtn = document.getElementById('clearFiltersBtn');
-    const showMyChoicesBtn = document.getElementById('showMyChoicesBtn');
-    const shortlistBanner = document.getElementById('shortlistBanner');
+    const shortlistBtn = document.getElementById('shortlistBtn');
+    const allLotsBtn = document.getElementById('allLotsBtn');
     const exportBtn = document.getElementById('exportBtn');
-    const shortlistViewBtn = document.getElementById('shortlistViewBtn');
     const importBtn = document.getElementById('importBtn');
     const importFile = document.getElementById('importFile');
+    const shortlistBanner = document.getElementById('shortlistBanner');
 
     const dialog = document.getElementById('editDialog');
     const modalTitle = document.getElementById('modalTitle');
@@ -410,213 +229,121 @@
     const secondLink = document.getElementById('secondLink');
     const notes = document.getElementById('notes');
     const cancelBtn = document.getElementById('cancelBtn');
-    const saveBtn = document.getElementById('saveBtn');
     const deleteEntryBtn = document.getElementById('deleteEntryBtn');
 
     function loadEdits() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      } catch (e) {
-        return {};
-      }
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch { return {}; }
     }
-
-    function saveEdits() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(edits));
+    function saveEdits() { localStorage.setItem(STORAGE_KEY, JSON.stringify(edits)); }
+    function getEdit(lot) { return edits[String(lot)] || {}; }
+    function totalScore(entry) { return Number(entry.physicalScore || 0) + Number(entry.pedigreeScore || 0); }
+    function isPicked(entry) { return Boolean(entry.choice || entry.physicalScore || entry.pedigreeScore || entry.notes || entry.secondLink); }
+    function lotImage(lot) { return `${BASE}/2026-PYS-${lot}.jpg`; }
+    function lotPedigree(lot) { return `${BASE}/2026-PYS-${lot}.pdf`; }
+    function escapeHtml(str) {
+      return String(str ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
     }
-
-    function getEdit(lot) {
-      return edits[String(lot)] || {};
+    function populateVendorFilter() {
+      const vendors = [...new Set(lots.map(x => x.vendor).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+      vendorFilter.innerHTML = '<option value="">All vendors</option>';
+      vendors.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        vendorFilter.appendChild(opt);
+      });
     }
-
-    function totalScore(entry) {
-      const p = Number(entry.physicalScore || 0);
-      const g = Number(entry.pedigreeScore || 0);
-      return p + g;
-    }
-
-    function isPicked(entry) {
-      return Boolean(entry.choice || entry.physicalScore || entry.pedigreeScore || entry.notes || entry.secondLink);
-    }
-
-    function lotImage(lot) {
-      return `${BASE}/2026-PYS-${lot}.jpg`;
-    }
-
-    function lotPedigree(lot) {
-      return `${BASE}/2026-PYS-${lot}.pdf`;
-    }
-
     function mergedRecord(base) {
       const entry = getEdit(base.lot);
-      return {
-        ...base,
-        choice: entry.choice || '',
-        physicalScore: entry.physicalScore || '',
-        pedigreeScore: entry.pedigreeScore || '',
-        secondLink: entry.secondLink || '',
-        notes: entry.notes || '',
-        total: totalScore(entry)
-      };
+      return { ...base, choice: entry.choice || '', physicalScore: entry.physicalScore || '', pedigreeScore: entry.pedigreeScore || '', secondLink: entry.secondLink || '', notes: entry.notes || '', total: totalScore(entry) };
     }
-
-    function choiceClass(choice) {
-      return choice || 'undecided';
-    }
-
-    function choiceLabel(choice) {
-      return choice ? choice.toUpperCase() : 'UNDECIDED';
-    }
-
-    function choiceTextClass(choice) {
-      return choice || 'undecided';
-    }
-
-    function compareValues(a, b, key, dir) {
+    function compareValues(a,b,key,dir) {
       let av, bv;
-      if (key === 'physical') {
-        av = Number(a.physicalScore || 0);
-        bv = Number(b.physicalScore || 0);
-      } else if (key === 'pedigree') {
-        av = Number(a.pedigreeScore || 0);
-        bv = Number(b.pedigreeScore || 0);
-      } else if (key === 'total') {
-        av = Number(a.total || 0);
-        bv = Number(b.total || 0);
-      } else {
-        av = Number(a.lot);
-        bv = Number(b.lot);
-      }
+      if (key === 'physical') { av = Number(a.physicalScore || 0); bv = Number(b.physicalScore || 0); }
+      else if (key === 'pedigree') { av = Number(a.pedigreeScore || 0); bv = Number(b.pedigreeScore || 0); }
+      else if (key === 'total') { av = Number(a.total || 0); bv = Number(b.total || 0); }
+      else { av = Number(a.lot); bv = Number(b.lot); }
       const res = av === bv ? Number(a.lot) - Number(b.lot) : av - bv;
       return dir === 'asc' ? res : -res;
     }
-
-    function populateVendorFilter() {
-      const vendors = [...new Set(lots.map(x => (x.vendor || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
-      vendorFilter.innerHTML = '<option value="">All vendors</option>';
-      vendors.forEach(vendor => {
-        const option = document.createElement('option');
-        option.value = vendor;
-        option.textContent = vendor;
-        vendorFilter.appendChild(option);
-      });
-    }
-
     function filteredData() {
       const q = search.value.trim().toLowerCase();
-      const selectedChoice = choiceFilter.value;
       const selectedVendor = vendorFilter.value;
+      const selectedChoice = choiceFilter.value;
       const pickedMode = pickedFilter.value;
-      const key = sortBy.value;
-      const dir = sortDir.value;
-
-      const out = lots
-        .map(mergedRecord)
-        .filter(r => {
-          const hay = `${r.lot} ${r.name} ${r.sire} ${r.dam} ${r.vendor}`.toLowerCase();
-          const okSearch = !q || hay.includes(q);
-          const choice = r.choice || 'undecided';
-          const okChoice = !selectedChoice || choice === selectedChoice;
-          const okVendor = !selectedVendor || (r.vendor || '') === selectedVendor;
-          const okPicked = pickedMode !== 'picked' || isPicked(r);
-          return okSearch && okChoice && okVendor && okPicked;
-        })
-        .sort((a, b) => compareValues(a, b, key, dir));
-
-      return out;
+      return lots.map(mergedRecord).filter(r => {
+        const hay = `${r.lot} ${r.name} ${r.sire} ${r.dam} ${r.vendor}`.toLowerCase();
+        const choice = r.choice || 'undecided';
+        return (!q || hay.includes(q)) && (!selectedVendor || r.vendor === selectedVendor) && (!selectedChoice || choice === selectedChoice) && (pickedMode !== 'picked' || isPicked(r));
+      }).sort((a,b)=>compareValues(a,b,sortBy.value,sortDir.value));
     }
-
     function render() {
       const records = filteredData();
       const shortlistOn = choiceFilter.value === 'yes' && pickedFilter.value === 'picked' && sortBy.value === 'total' && sortDir.value === 'desc';
       shortlistBanner.style.display = shortlistOn ? 'block' : 'none';
-      grid.innerHTML = '';
       const yesCount = Object.values(edits).filter(e => e.choice === 'yes').length;
       const pickedCount = Object.values(edits).filter(isPicked).length;
-      summary.innerHTML = `
-        <div>${records.length} lot${records.length === 1 ? '' : 's'} shown</div>
-        <div>Saved choices: ${pickedCount} updated • Yes: ${yesCount}</div>
-      `;
-
+      summary.innerHTML = `<div>${records.length} lot${records.length===1?'':'s'} shown</div><div>${pickedCount} updated • ${yesCount} yes</div>`;
+      grid.innerHTML = '';
       records.forEach(record => {
-        const secondLinkButton = record.secondLink
-          ? `<a href="${escapeAttr(record.secondLink)}" target="_blank" rel="noopener noreferrer" class="ghost">Second link</a>`
-          : `<button type="button" class="ghost" data-edit="${record.lot}">Update</button>`;
-
-        const notesHtml = record.notes
-          ? `<div class="meta"><span class="label">Notes:</span> ${escapeHtml(record.notes)}</div>`
-          : '';
-
         const card = document.createElement('article');
-        card.className = `card choice-${choiceClass(record.choice)}`;
+        const choice = record.choice || 'undecided';
+        const chipClass = choice === 'yes' ? 'chip yes' : choice === 'no' ? 'chip no' : 'chip';
+        const linkButton = record.secondLink ? `<a class="ghost" href="${escapeHtml(record.secondLink)}" target="_blank" rel="noopener noreferrer">2nd link</a>` : `<button class="ghost" type="button" data-edit="${record.lot}">Update</button>`;
+        const notesBlock = record.notes ? `<div class="notes"><span class="label">Notes:</span> ${escapeHtml(record.notes)}</div>` : '';
+        card.className = 'card';
         card.innerHTML = `
-          <div class="img-wrap">
-            <img src="${lotImage(record.lot)}" alt="Lot ${record.lot}" loading="lazy"
-                 onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\\'img-fallback\\'>No image found for Lot ${record.lot}</div>'">
+          <div class="imgwrap">
+            <img src="${lotImage(record.lot)}" alt="Lot ${record.lot}" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<div class=\'imgfallback\'>No image found for Lot ${record.lot}</div>'">
           </div>
           <div class="content">
-            <div class="topline">
-              <div>
-                <div class="lot">Lot ${record.lot}</div>
-                <div class="name">${escapeHtml(record.name)}</div>
-              </div>
+            <div class="rowtop">
+              <div><div class="lot">Lot ${record.lot}</div><div class="name">${escapeHtml(record.name)}</div></div>
               <div class="sex">${escapeHtml(record.sex || '')}</div>
             </div>
-
-            <div class="choice-bar">
-              <span class="choice-pill ${choiceTextClass(record.choice)}">${choiceLabel(record.choice)}</span>
-            </div>
-
+            <div class="chips"><span class="${chipClass}">${choice ? choice.toUpperCase() : 'UNDECIDED'}</span><span class="chip">${escapeHtml(record.vendor)}</span></div>
             <div class="meta"><span class="label">Sire:</span> ${escapeHtml(record.sire)}</div>
             <div class="meta"><span class="label">Dam:</span> ${escapeHtml(record.dam)}</div>
-            <div class="meta"><span class="label">Vendor:</span> ${escapeHtml(record.vendor)}</div>
-
-            <div class="score-row">
-              <div class="score-box"><div class="k">Physical</div><div class="v">${record.physicalScore || '-'}</div></div>
-              <div class="score-box"><div class="k">Pedigree</div><div class="v">${record.pedigreeScore || '-'}</div></div>
-              <div class="score-box"><div class="k">Total</div><div class="v">${record.total || '-'}</div></div>
+            <div class="scores">
+              <div class="score"><div class="k">Physical</div><div class="v">${record.physicalScore || '-'}</div></div>
+              <div class="score"><div class="k">Pedigree</div><div class="v">${record.pedigreeScore || '-'}</div></div>
+              <div class="score"><div class="k">Total</div><div class="v">${record.total || '-'}</div></div>
             </div>
-
-            ${notesHtml}
-
+            ${notesBlock}
             <div class="actions">
-              <a href="${lotImage(record.lot)}" target="_blank" rel="noopener noreferrer">Photo</a>
-              <a href="${lotPedigree(record.lot)}" target="_blank" rel="noopener noreferrer" class="secondary">Pedigree</a>
-              <button type="button" data-edit="${record.lot}">Score / Update</button>
-              ${secondLinkButton}
+              <a class="primary" href="${lotImage(record.lot)}" target="_blank" rel="noopener noreferrer">Photo</a>
+              <a class="secondary" href="${lotPedigree(record.lot)}" target="_blank" rel="noopener noreferrer">Pedigree</a>
+              <button class="primary" type="button" data-edit="${record.lot}">Score</button>
+              ${linkButton}
             </div>
-          </div>
-        `;
+          </div>`;
         grid.appendChild(card);
       });
-
-      grid.querySelectorAll('[data-edit]').forEach(btn => {
-        btn.addEventListener('click', () => openEditor(Number(btn.dataset.edit)));
-      });
+      grid.querySelectorAll('[data-edit]').forEach(btn => btn.addEventListener('click', () => openEditor(Number(btn.dataset.edit))));
     }
-
     function openEditor(lot) {
       currentLot = lot;
       const base = lots.find(x => x.lot === lot);
       const entry = getEdit(lot);
-
       modalTitle.textContent = `Lot ${lot} — ${base.name}`;
       modalSub.textContent = `${base.sire} x ${base.dam}`;
-
-      const radio = editForm.querySelectorAll('input[name="choice"]');
-      radio.forEach(r => r.checked = (entry.choice || 'undecided') === r.value);
-      if (!entry.choice) {
-        editForm.querySelector('input[name="choice"][value="undecided"]').checked = true;
-      }
-
+      editForm.querySelectorAll('input[name="choice"]').forEach(r => r.checked = (entry.choice || 'undecided') === r.value);
+      if (!entry.choice) editForm.querySelector('input[name="choice"][value="undecided"]').checked = true;
       physicalScore.value = entry.physicalScore || '';
       pedigreeScore.value = entry.pedigreeScore || '';
       secondLink.value = entry.secondLink || '';
       notes.value = entry.notes || '';
-
       dialog.showModal();
     }
-
+    function saveCurrentEntry() {
+      if (currentLot == null) return;
+      const choice = editForm.querySelector('input[name="choice"]:checked')?.value || 'undecided';
+      edits[String(currentLot)] = { choice, physicalScore: physicalScore.value, pedigreeScore: pedigreeScore.value, secondLink: secondLink.value.trim(), notes: notes.value.trim() };
+      if (!isPicked(edits[String(currentLot)])) delete edits[String(currentLot)];
+      saveEdits();
+      dialog.close();
+      render();
+    }
     function clearCurrentEntry() {
       if (currentLot == null) return;
       delete edits[String(currentLot)];
@@ -624,109 +351,52 @@
       dialog.close();
       render();
     }
-
-    function saveCurrentEntry() {
-      if (currentLot == null) return;
-      const choice = editForm.querySelector('input[name="choice"]:checked')?.value || 'undecided';
-      edits[String(currentLot)] = {
-        choice,
-        physicalScore: physicalScore.value,
-        pedigreeScore: pedigreeScore.value,
-        secondLink: secondLink.value.trim(),
-        notes: notes.value.trim()
-      };
-      if (!isPicked(edits[String(currentLot)])) {
-        delete edits[String(currentLot)];
-      }
-      saveEdits();
-      dialog.close();
-      render();
-    }
-
     function exportData() {
-      const blob = new Blob([JSON.stringify(edits, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(edits,null,2)],{type:'application/json'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'racecoast-sales-window-updates.json';
+      const a=document.createElement('a');
+      a.href=url;
+      a.download='racecoast-sales-window-updates.json';
       a.click();
       URL.revokeObjectURL(url);
     }
-
     function importData(file) {
-      const reader = new FileReader();
-      reader.onload = () => {
+      const reader=new FileReader();
+      reader.onload=()=>{
         try {
-          const parsed = JSON.parse(reader.result);
-          edits = parsed && typeof parsed === 'object' ? parsed : {};
+          const parsed=JSON.parse(reader.result);
+          edits=(parsed && typeof parsed==='object') ? parsed : {};
           saveEdits();
           render();
           alert('Updates imported.');
-        } catch (e) {
+        } catch {
           alert('Could not import that file.');
         }
       };
       reader.readAsText(file);
     }
 
-    function escapeHtml(str) {
-      return String(str ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
-    }
-
-    function escapeAttr(str) {
-      return escapeHtml(str);
-    }
-
-    search.addEventListener('input', render);
-    choiceFilter.addEventListener('change', render);
-    vendorFilter.addEventListener('change', render);
-    pickedFilter.addEventListener('change', render);
-    sortBy.addEventListener('change', render);
-    sortDir.addEventListener('change', render);
-
+    openFiltersBtn.addEventListener('click', () => filtersDialog.showModal());
+    closeFiltersBtn.addEventListener('click', () => filtersDialog.close());
+    [search,vendorFilter,choiceFilter,pickedFilter,sortBy,sortDir].forEach(el => el.addEventListener('input', render));
+    [vendorFilter,choiceFilter,pickedFilter,sortBy,sortDir].forEach(el => el.addEventListener('change', render));
     clearFiltersBtn.addEventListener('click', () => {
-      search.value = '';
-      choiceFilter.value = '';
-      vendorFilter.value = '';
-      pickedFilter.value = '';
-      sortBy.value = 'lot';
-      sortDir.value = 'desc';
-      render();
+      vendorFilter.value=''; choiceFilter.value=''; pickedFilter.value=''; sortBy.value='lot'; sortDir.value='asc'; render();
     });
-
-    showMyChoicesBtn.addEventListener('click', () => {
-      pickedFilter.value = 'picked';
-      choiceFilter.value = 'yes';
-      sortBy.value = 'total';
-      sortDir.value = 'desc';
-      render();
+    shortlistBtn.addEventListener('click', () => {
+      pickedFilter.value='picked'; choiceFilter.value='yes'; sortBy.value='total'; sortDir.value='desc'; render();
     });
-
-    shortlistViewBtn.addEventListener('click', () => {
-      pickedFilter.value = 'picked';
-      choiceFilter.value = 'yes';
-      sortBy.value = 'total';
-      sortDir.value = 'desc';
-      render();
+    allLotsBtn.addEventListener('click', () => {
+      search.value=''; vendorFilter.value=''; choiceFilter.value=''; pickedFilter.value=''; sortBy.value='lot'; sortDir.value='asc'; render();
     });
-
     exportBtn.addEventListener('click', exportData);
     importBtn.addEventListener('click', () => importFile.click());
-    importFile.addEventListener('change', (e) => {
-      const file = e.target.files?.[0];
-      if (file) importData(file);
-      importFile.value = '';
+    importFile.addEventListener('change', e => {
+      const file=e.target.files?.[0];
+      if(file) importData(file);
+      importFile.value='';
     });
-
-    editForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      saveCurrentEntry();
-    });
+    editForm.addEventListener('submit', e => { e.preventDefault(); saveCurrentEntry(); });
     cancelBtn.addEventListener('click', () => dialog.close());
     deleteEntryBtn.addEventListener('click', clearCurrentEntry);
 
